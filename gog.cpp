@@ -47,7 +47,44 @@ class Entity {
 
         int x_pos;
         int y_pos;
-        int moveSpeed;
 
         bool collision;
+};
+
+// BRAINSTORM::
+// What are the categories of entities in this game?
+// There are living, moving creatures: animals, people, the player, enemies
+// There are living plants that change state and can be harvested
+// There are natural resources that can be broken for items
+// There are walls that don't move and can't break
+// There are portals (doors) that change the room
+// There are items that can drop from killed / destroyed things
+// There is farmland / soil, that can be tilled or fertilized and planted on
+
+class Character {
+
+};
+
+class Plant {
+
+};
+
+class ResourceEntity {
+
+};
+
+class Wall {
+
+};
+
+class Portal {
+
+};
+
+class Item {
+
+};
+
+class GroundPatch {
+
 };
