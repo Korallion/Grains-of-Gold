@@ -83,8 +83,6 @@ void close()
 
 int main( int argc, char* args[] )
 {
-    printf( "Let's get this started!" );
-
     if( !init() )
     {
         printf( "Failed to initialize!\n" );
