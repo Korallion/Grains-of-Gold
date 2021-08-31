@@ -9,7 +9,7 @@ class GameTexture {
         ~GameTexture();
         bool loadFromFile( SDL_Renderer* renderer, std::string path );
         void free();
-        void render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip );
+        void render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip = NULL );
 
         SDL_Texture* tTexture;
         int width;
