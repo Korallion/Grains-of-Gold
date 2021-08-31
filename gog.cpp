@@ -2,27 +2,10 @@
 #include <SDL2/SDL_image.h>
 #include <string>
 #include <cstdio>
+#include "./classes/GameTexture.h"
 
 const int SCREEN_W = 640;
 const int SCREEN_H = 480;
-
-class GameTexture {
-    public:
-        GameTexture();
-        ~GameTexture();
-        bool loadFromFile( std::string path );
-        void free();
-        void render( int x, int y );
-
-        int getWidth();
-        int getHeight();
-
-    private:
-        SDL_Texture* tTexture;
-        int width;
-        int height;
-
-};
 
 class Room {
     public:
@@ -40,10 +23,10 @@ class Entity {
         Entity();
         ~Entity();
 
-    private:
         GameTexture* texture;
         int width;
         int height;
+        std::string name;
 
         int x_pos;
         int y_pos;
@@ -61,30 +44,50 @@ class Entity {
 // There are items that can drop from killed / destroyed things
 // There is farmland / soil, that can be tilled or fertilized and planted on
 
-class Character {
+class Player: public Entity {
+    public:
+        Player();
+        ~Player();
+};
+
+class Plant: public Entity {
+    public:
+        Plant();
+        ~Plant();
+    
+    private:
+        int maxGrowthTime;
+        int growSpeed;
 
 };
 
-class Plant {
+// class ResourceEntity {
 
-};
+// };
 
-class ResourceEntity {
+// class Wall {
 
-};
+// };
 
-class Wall {
+// class Portal {
 
-};
+// };
 
-class Portal {
+// class Item {
 
-};
+// };
 
-class Item {
+// class GroundPatch {
 
-};
+// };
 
-class GroundPatch {
+SDL_Window* gameWindow = NULL;
+SDL_Renderer* gameRenderer = NULL;
 
-};
+
+
+int main( int argc, char* args[] ){
+
+
+
+}
