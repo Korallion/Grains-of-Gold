@@ -2,7 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <string>
 #include <cstdio>
-#include "./classes/class_list.h"
+#include "classes/class_list.h"
 
 // BRAINSTORM::
 // What are the categories of entities in this game?
@@ -107,32 +107,11 @@ int main( int argc, char* args[] )
                 if( e.type == SDL_QUIT )
                 {
                     quit = true;
-                } 
-                else if( e.type == SDL_KEYDOWN )
-                {
-                    switch( e.key.keysym.sym )
-                    {
-                        case SDLK_a:
-
-                        break;
-
-                        case SDLK_d:
-
-                        break;
-
-                        case SDLK_w:
-
-                        break;
-
-                        case SDLK_s:
-
-                        break;
-
-                        default:
-                        break;
-                    }
                 }
             }
+
+            player->velocityUpdate(SDL_GetKeyboardState(NULL));
+            player->positionUpdate();
 
             SDL_SetRenderDrawColor( gameRenderer, 0xFF, 0xFF, 0xFF, 0XFF );
             SDL_RenderClear( gameRenderer );
@@ -141,7 +120,6 @@ int main( int argc, char* args[] )
 
             SDL_RenderPresent( gameRenderer );
         }
-
     }
 
     return 0;

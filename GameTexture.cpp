@@ -1,4 +1,4 @@
-#include "GameTexture.h"
+#include "classes/GameTexture.h"
 
 GameTexture::GameTexture(){
     tTexture = NULL;
