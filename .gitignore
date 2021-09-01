@@ -1,3 +1,4 @@
 gog
-sprites
-ttf
+sprites/
+ttf/
+.vscode/
