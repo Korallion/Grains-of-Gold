@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = gog.cpp ./classes/GameTexture.cpp ./classes/Player.cpp
+OBJS = main.cpp GameTexture.cpp Player.cpp
 
 #CC specifies which compiler we're using
 CC = g++
@@ -12,7 +12,7 @@ COMPILER_FLAGS = -w
 LINKER_FLAGS = -lSDL2 -lSDL2_image
 
 #OBJ_Name specifies the name of our executable
-OBJ_NAME = gog
+OBJ_NAME = grains
 
 #This is the target that compiles our executable
 all : $(OBJS)

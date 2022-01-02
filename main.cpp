@@ -2,17 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <string>
 #include <cstdio>
-#include "./classes/class_list.h"
-
-// BRAINSTORM::
-// What are the categories of entities in this game?
-// There are living, moving creatures: animals, people, the player, enemies
-// There are living plants that change state and can be harvested
-// There are natural resources that can be broken for items
-// There are walls that don't move and can't break
-// There are portals (doors) that change the room
-// There are items that can drop from killed / destroyed things
-// There is farmland / soil, that can be tilled or fertilized and planted on
+#include "classes/class_list.h"
 
 const int SCREEN_W = 640;
 const int SCREEN_H = 480;
@@ -97,8 +87,8 @@ int main( int argc, char* args[] )
 
         player->texture->loadFromFile( gameRenderer, "sprites/player_sprite.png" );
 
-        player->pos_x = ( SCREEN_W - player->texture->width ) / 2;
-        player->pos_y = ( SCREEN_H - player->texture->height ) / 2;
+        player->pos_x = ( SCREEN_W - player->texture->width ) / 3;
+        player->pos_y = ( SCREEN_H - player->texture->height ) / 3;
 
         while( !quit )
         {
@@ -107,32 +97,10 @@ int main( int argc, char* args[] )
                 if( e.type == SDL_QUIT )
                 {
                     quit = true;
-                } 
-                else if( e.type == SDL_KEYDOWN )
-                {
-                    switch( e.key.keysym.sym )
-                    {
-                        case SDLK_a:
-
-                        break;
-
-                        case SDLK_d:
-
-                        break;
-
-                        case SDLK_w:
-
-                        break;
-
-                        case SDLK_s:
-
-                        break;
-
-                        default:
-                        break;
-                    }
                 }
             }
+
+            player->positionUpdate(SDL_GetKeyboardState(NULL));
 
             SDL_SetRenderDrawColor( gameRenderer, 0xFF, 0xFF, 0xFF, 0XFF );
             SDL_RenderClear( gameRenderer );
@@ -141,7 +109,6 @@ int main( int argc, char* args[] )
 
             SDL_RenderPresent( gameRenderer );
         }
-
     }
 
     return 0;
