@@ -9,19 +9,13 @@ class Player{
 
         void renderPlayer( SDL_Renderer* renderer );
 
-        void velocityUpdate( const Uint8* KeyState );
-
-        void positionUpdate();
-
+        void positionUpdate( const Uint8* KeyState );
+        
         int pos_x;
         int pos_y;
 
-        int vel_x;
-        int vel_y;
-        int vel_max = 32;
-
-        int accel = 1;
-        int decel = 3;
+        int vel_x = 8;
+        int vel_y = 8;
 
         GameTexture* texture;
 };

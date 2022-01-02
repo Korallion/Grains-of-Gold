@@ -12,7 +12,7 @@ COMPILER_FLAGS = -w
 LINKER_FLAGS = -lSDL2 -lSDL2_image
 
 #OBJ_Name specifies the name of our executable
-OBJ_NAME = gog
+OBJ_NAME = grains
 
 #This is the target that compiles our executable
 all : $(OBJS)
