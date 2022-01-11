@@ -102,9 +102,11 @@ int main( int argc, char* args[] )
         textRender.loadTTF("ttf/fixed_01.ttf");
         SDL_Color textColor = {0,0,0};
 
-        float frameCount = 1;
+
+        float frameCount = 0;
         float avgFPS;
         int frameStartTime;
+        float deltaTime = 0;
 
         while( !quit )
         {
@@ -142,8 +144,10 @@ int main( int argc, char* args[] )
 
             frameCount++;
 
-            if (SDL_GetTicks() - frameStartTime < SCREEN_TICKS_PER_FRAME){
-                SDL_Delay( SCREEN_TICKS_PER_FRAME - SDL_GetTicks() + frameStartTime);
+            deltaTime = SDL_GetTicks() - frameStartTime;
+
+            if (deltaTime < SCREEN_TICKS_PER_FRAME){
+                SDL_Delay(SCREEN_TICKS_PER_FRAME - deltaTime);
             }
         }
     }
