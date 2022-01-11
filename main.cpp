@@ -2,6 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <string>
 #include <cstdio>
+#include <cmath>
 #include "classes/class_list.h"
 
 const int SCREEN_W = 640;
@@ -60,6 +61,12 @@ bool init()
         }
     }
 
+    if( TTF_Init() == -1)
+    {
+        printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+        success = false;
+    }
+
     return success;
 }
 
@@ -90,6 +97,11 @@ int main( int argc, char* args[] )
         player->pos_x = ( SCREEN_W - player->texture->width ) / 3;
         player->pos_y = ( SCREEN_H - player->texture->height ) / 3;
 
+        GameTexture textRender;
+        SDL_Color textColor = {0,0,0};
+
+        textRender.loadTTF("ttf/fixed_01.ttf");
+
         while( !quit )
         {
             while( SDL_PollEvent( &e ) != 0 )
@@ -106,6 +118,11 @@ int main( int argc, char* args[] )
             SDL_RenderClear( gameRenderer );
 
             player->renderPlayer( gameRenderer );
+
+            
+            textRender.loadFromText( gameRenderer, "X: " + std::to_string(player->pos_x) + "  Y: " + std::to_string(player->pos_y), textColor);
+
+            textRender.render(gameRenderer, 20, 20, NULL);
 
             SDL_RenderPresent( gameRenderer );
         }
