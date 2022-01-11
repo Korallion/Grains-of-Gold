@@ -3,10 +3,13 @@
 #include <string>
 #include <cstdio>
 #include <cmath>
+#include <sstream>
 #include "classes/class_list.h"
 
 const int SCREEN_W = 640;
 const int SCREEN_H = 480;
+const int SCREEN_FPS = 60;
+const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 
 SDL_Window* gameWindow = NULL;
 SDL_Renderer* gameRenderer = NULL;
@@ -91,19 +94,22 @@ int main( int argc, char* args[] )
         SDL_Event e;
 
         Player* player = new Player();
-
         player->texture->loadFromFile( gameRenderer, "sprites/player_sprite.png" );
-
-        player->pos_x = ( SCREEN_W - player->texture->width ) / 3;
-        player->pos_y = ( SCREEN_H - player->texture->height ) / 3;
+        player->pos_x = ( SCREEN_W - player->texture->width ) / 2;
+        player->pos_y = ( SCREEN_H - player->texture->height ) / 2;
 
         GameTexture textRender;
+        textRender.loadTTF("ttf/fixed_01.ttf");
         SDL_Color textColor = {0,0,0};
 
-        textRender.loadTTF("ttf/fixed_01.ttf");
+        float frameCount = 1;
+        float avgFPS;
+        int frameStartTime;
 
         while( !quit )
         {
+            frameStartTime = SDL_GetTicks();
+
             while( SDL_PollEvent( &e ) != 0 )
             {
                 if( e.type == SDL_QUIT )
@@ -112,19 +118,33 @@ int main( int argc, char* args[] )
                 }
             }
 
-            player->positionUpdate(SDL_GetKeyboardState(NULL));
-
             SDL_SetRenderDrawColor( gameRenderer, 0xFF, 0xFF, 0xFF, 0XFF );
             SDL_RenderClear( gameRenderer );
 
+            player->positionUpdate(SDL_GetKeyboardState(NULL));
             player->renderPlayer( gameRenderer );
-
             
+            // Top right corner player data
             textRender.loadFromText( gameRenderer, "X: " + std::to_string(player->pos_x) + "  Y: " + std::to_string(player->pos_y), textColor);
+            textRender.render(gameRenderer, 10, 10, NULL, 0.5);
 
-            textRender.render(gameRenderer, 20, 20, NULL);
+            avgFPS = frameCount / SDL_GetTicks() * 1000.f;
+            textRender.loadFromText( gameRenderer, "FPS: " + std::to_string(avgFPS), textColor);
+            textRender.render(gameRenderer, 10, 30, NULL, 0.5);
+
+            textRender.loadFromText( gameRenderer, "Time Passed: " + std::to_string(SDL_GetTicks() / 1000.f) + " s", textColor);
+            textRender.render(gameRenderer, 10, 50, NULL, 0.5);
+
+            textRender.loadFromText( gameRenderer, "Frames Rendered: " + std::to_string(frameCount), textColor);
+            textRender.render(gameRenderer, 10, 70, NULL, 0.5);
 
             SDL_RenderPresent( gameRenderer );
+
+            frameCount++;
+
+            if (SDL_GetTicks() - frameStartTime < SCREEN_TICKS_PER_FRAME){
+                SDL_Delay( SCREEN_TICKS_PER_FRAME - SDL_GetTicks() + frameStartTime);
+            }
         }
     }
 
