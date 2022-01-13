@@ -9,13 +9,13 @@ class Player{
 
         void renderPlayer( SDL_Renderer* renderer );
 
-        void positionUpdate( const Uint8* KeyState );
+        void positionUpdate( const Uint8* KeyState , float deltaTime);
         
-        int pos_x;
-        int pos_y;
+        float pos_x;
+        float pos_y;
 
-        int vel_x = 1;
-        int vel_y = 1;
+        float vel_x;
+        float vel_y;
 
         GameTexture* texture;
 };
