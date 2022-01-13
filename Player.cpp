@@ -1,14 +1,18 @@
 #include "classes/Player.h"
 
-Player::Player()
+Player::Player(int x, int y, SDL_Renderer* renderer, std::string path)
 {
-    pos_x = 0;
-    pos_y = 0;
+    pos_x = x;
+    pos_y = y;
 
     vel_x = 0.25;
     vel_y = 0.25;
 
     texture = new GameTexture();
+    texture->loadFromFile( renderer, path);
+
+    width = texture->width;
+    height = texture->height;
 }
 
 Player::~Player()
@@ -16,9 +20,9 @@ Player::~Player()
 
 }
 
-void Player::renderPlayer( SDL_Renderer* renderer )
+void Player::render( SDL_Renderer* renderer )
 {
-    texture->render( renderer, pos_x, pos_y, NULL, 1 );
+    texture->render( renderer, pos_x, pos_y, NULL);
 }
 
 void Player::positionUpdate( const Uint8* keyState, float deltaTime)

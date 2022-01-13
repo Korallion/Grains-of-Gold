@@ -17,7 +17,7 @@ class GameTexture {
 
         void free();
 
-        void render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, float zoom );
+        void render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip);
 
         SDL_Texture* tTexture;
         int width;

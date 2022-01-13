@@ -93,15 +93,13 @@ int main( int argc, char* args[] )
 
         SDL_Event e;
 
-        Player* player = new Player();
-        player->texture->loadFromFile( gameRenderer, "sprites/player_sprite.png" );
-        player->pos_x = ( SCREEN_W - player->texture->width ) / 2;
-        player->pos_y = ( SCREEN_H - player->texture->height ) / 2;
+        Player* player = new Player( SCREEN_W  / 2, SCREEN_H / 2, gameRenderer, "sprites/player_sprite.png");
+
+        Wall* wall = new Wall(SCREEN_W / 2, 200, gameRenderer, "sprites/basic_wall.png");
 
         GameTexture textRender;
         textRender.loadTTF("ttf/fixed_01.ttf");
         SDL_Color textColor = {0,0,0};
-
 
         float frameCount = 0;
         float avgFPS;
@@ -125,20 +123,22 @@ int main( int argc, char* args[] )
             SDL_RenderClear( gameRenderer );
 
             player->positionUpdate(SDL_GetKeyboardState(NULL), deltaTime);
-            player->renderPlayer( gameRenderer );
+            player->render( gameRenderer );
+
+            wall->render( gameRenderer );
             
             // Top right corner player data
             textRender.loadFromText( gameRenderer, "X: " + std::to_string(player->pos_x) + "  Y: " + std::to_string(player->pos_y), textColor);
-            textRender.render(gameRenderer, 10, 10, NULL, 0.5);
+            textRender.render(gameRenderer, 10, 10, NULL);
 
             textRender.loadFromText( gameRenderer, "Time Passed: " + std::to_string(SDL_GetTicks() / 1000.f) + " s", textColor);
-            textRender.render(gameRenderer, 10, 50, NULL, 0.5);
+            textRender.render(gameRenderer, 10, 60, NULL);
 
             textRender.loadFromText( gameRenderer, "Frames Rendered: " + std::to_string(frameCount), textColor);
-            textRender.render(gameRenderer, 10, 70, NULL, 0.5);
+            textRender.render(gameRenderer, 10, 110, NULL);
 
             textRender.loadFromText( gameRenderer, "FPS: " + std::to_string(avgFPS), textColor);
-            textRender.render(gameRenderer, 10, 30, NULL, 0.5);
+            textRender.render(gameRenderer, 10, 160, NULL);
 
             if ( frameStartTime - relativeTime > 200){
                 avgFPS = frameCount / (SDL_GetTicks() - relativeTime) * 1000.f;

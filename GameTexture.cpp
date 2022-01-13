@@ -88,9 +88,9 @@ void GameTexture::free(){
     }
 }
 
-void GameTexture::render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, float zoom){
+void GameTexture::render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip){
 
-    SDL_Rect renderRect = { x, y, width * zoom, height * zoom };
+    SDL_Rect renderRect = { x, y, width, height };
 
     // If clipping, then change the render rectange to match dimensions of clip
     if( clip != NULL ){
