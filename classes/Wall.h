@@ -2,8 +2,7 @@
 #include "GameTexture.h"
 #include <string>
 
-class Wall{
-    public:
+struct Wall{
         float pos_x;
         float pos_y;
 

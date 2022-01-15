@@ -1,4 +1,4 @@
-sprites/
-ttf/
+.sprites/
+.ttf/
 .vscode/
 grains

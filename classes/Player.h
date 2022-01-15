@@ -2,8 +2,8 @@
 #include "GameTexture.h"
 #include <string>
 
-class Player{
-    public:
+struct Player{
+
         float pos_x;
         float pos_y;
 
