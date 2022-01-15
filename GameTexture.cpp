@@ -88,7 +88,7 @@ void GameTexture::free(){
     }
 }
 
-void GameTexture::render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip){
+void GameTexture::render( SDL_Renderer* renderer, SDL_Rect* clip, int x, int y){
 
     SDL_Rect renderRect = { x, y, width, height };
 
@@ -97,6 +97,13 @@ void GameTexture::render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip){
         renderRect.w = clip->w;
         renderRect.h = clip->h;
     }
+
+    SDL_RenderCopy( renderer, tTexture, clip, &renderRect );
+}
+
+void GameTexture::render( SDL_Renderer* renderer, SDL_Rect* clip, int x, int y, int w, int h){
+
+    SDL_Rect renderRect = { x, y, w, h };
 
     SDL_RenderCopy( renderer, tTexture, clip, &renderRect );
 }

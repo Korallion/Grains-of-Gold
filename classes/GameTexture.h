@@ -16,7 +16,9 @@ struct GameTexture {
 
         void free();
 
-        void render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip);
+        void render( SDL_Renderer* renderer, SDL_Rect* clip, int x, int y);
+        void render( SDL_Renderer* renderer, SDL_Rect* clip, int x, int y, int w, int h);
+
 
         SDL_Texture* tTexture;
         int width;

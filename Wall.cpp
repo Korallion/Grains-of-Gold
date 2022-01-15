@@ -1,14 +1,14 @@
 #include "classes/Wall.h"
 
 Wall::Wall(int x, int y, SDL_Renderer* renderer, std::string path){
-    pos_x = x;
-    pos_y = y;
+    rect.x = x;
+    rect.y = y;
 
     texture = new GameTexture();
     texture->loadFromFile( renderer, path);
 
-    width = texture->width;
-    height = texture->height;
+    rect.w = texture->width;
+    rect.h = texture->height;
 }
 
 Wall::~Wall(){
@@ -17,5 +17,5 @@ Wall::~Wall(){
 
 void Wall::render( SDL_Renderer* renderer )
 {
-    texture->render( renderer, pos_x, pos_y, NULL);
+    texture->render( renderer, NULL, rect.x, rect.y);
 }

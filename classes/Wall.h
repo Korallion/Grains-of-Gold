@@ -1,13 +1,11 @@
 #pragma once
 #include "GameTexture.h"
+#include "Rectangle.h"
 #include <string>
 
 struct Wall{
-        float pos_x;
-        float pos_y;
 
-        float width;
-        float height;
+        Rectangle rect;
 
         GameTexture* texture;
 

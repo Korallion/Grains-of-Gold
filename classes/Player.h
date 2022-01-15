@@ -1,21 +1,18 @@
 #pragma once
 #include "GameTexture.h"
+#include "Rectangle.h"
 #include <string>
 
 struct Player{
-
-        float pos_x;
-        float pos_y;
-
+        
         float vel_x;
         float vel_y;
 
-        float width;
-        float height;
+        Rectangle rect;
 
         GameTexture* texture;
         
-        Player(int x, int y, SDL_Renderer* renderer, std::string path);
+        Player(float x, float y, SDL_Renderer* renderer, std::string path);
         ~Player();
 
         void render( SDL_Renderer* renderer );

@@ -128,17 +128,17 @@ int main( int argc, char* args[] )
             wall->render( gameRenderer );
             
             // Top right corner player data
-            textRender.loadFromText( gameRenderer, "X: " + std::to_string(player->pos_x) + "  Y: " + std::to_string(player->pos_y), textColor);
-            textRender.render(gameRenderer, 10, 10, NULL);
+            textRender.loadFromText( gameRenderer, "X: " + std::to_string(player->rect.x) + "  Y: " + std::to_string(player->rect.y), textColor);
+            textRender.render(gameRenderer, NULL, 10, 10);
 
             textRender.loadFromText( gameRenderer, "Time Passed: " + std::to_string(SDL_GetTicks() / 1000.f) + " s", textColor);
-            textRender.render(gameRenderer, 10, 60, NULL);
+            textRender.render(gameRenderer, NULL, 10, 60);
 
             textRender.loadFromText( gameRenderer, "Frames Rendered: " + std::to_string(frameCount), textColor);
-            textRender.render(gameRenderer, 10, 110, NULL);
+            textRender.render(gameRenderer, NULL, 10, 110);
 
             textRender.loadFromText( gameRenderer, "FPS: " + std::to_string(avgFPS), textColor);
-            textRender.render(gameRenderer, 10, 160, NULL);
+            textRender.render(gameRenderer, NULL, 10, 160);
 
             if ( frameStartTime - relativeTime > 200){
                 avgFPS = frameCount / (SDL_GetTicks() - relativeTime) * 1000.f;
