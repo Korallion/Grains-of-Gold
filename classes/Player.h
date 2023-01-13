@@ -7,7 +7,7 @@ class Player{
         Player();
         ~Player();
 
-        void renderPlayer( SDL_Renderer* renderer );
+        void renderPlayer( SDL_Renderer* renderer , SDL_Rect* cameraRect);
 
         void positionUpdate( const Uint8* KeyState , float deltaTime);
         

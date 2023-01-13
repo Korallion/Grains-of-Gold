@@ -16,14 +16,13 @@ Player::~Player()
 
 }
 
-void Player::renderPlayer( SDL_Renderer* renderer )
+void Player::renderPlayer( SDL_Renderer* renderer , SDL_Rect* cameraRect)
 {
-    texture->render( renderer, pos_x, pos_y, NULL, 1 );
+    texture->renderToCamera( renderer, pos_x, pos_y, cameraRect);
 }
 
 void Player::positionUpdate( const Uint8* keyState, float deltaTime)
 {
-    // Check if sprinting
     float sprint = 1;
     float diagonal = 1;
 
