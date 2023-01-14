@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cmath>
 #include <sstream>
-#include "classes/class_list.h"
+#include "include_list.h"
 
 const int BACKGROUND_W = 1920;
 const int BACKGROUND_H = 1080;
@@ -12,79 +12,17 @@ const int BACKGROUND_H = 1080;
 const int CAMERA_W = 1280;
 const int CAMERA_H = 720;
 
+SDL_Rect screenGeometry = { SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720 };
+
 const int SCREEN_FPS = 60;
 const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 
-SDL_Window *gameWindow = NULL;
-SDL_Renderer *gameRenderer = NULL;
-
-bool init();
-void close();
-
-bool init()
-{
-    bool success = true;
-
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
-    {
-        printf("Failed to initialize SDL! Error: %s\n", SDL_GetError());
-        return false;
-    }
-
-    if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
-    {
-        printf("Warning: Linear texture filtering not enabled!");
-    }
-
-    gameWindow = SDL_CreateWindow("Grains of Gold", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, CAMERA_W, CAMERA_H, SDL_WINDOW_SHOWN);
-
-    if (gameWindow == NULL)
-    {
-        printf("Failed to create window! Error: %s\n", SDL_GetError());
-        return false;
-    }
-
-    gameRenderer = SDL_CreateRenderer(gameWindow, -1, SDL_RENDERER_ACCELERATED);
-
-    if (gameRenderer == NULL)
-    {
-        printf("Failed to create renderer! Error: %s\n", SDL_GetError());
-        return false;
-    }
-
-    SDL_SetRenderDrawColor(gameRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-    int imgFlags = IMG_INIT_PNG;
-
-    if (!(IMG_Init(imgFlags) & imgFlags))
-    {
-        printf("Failed to initialize SDL_iamge! Error: %s\n", IMG_GetError());
-        return false;
-    }
-
-    if (TTF_Init() == -1)
-    {
-        printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
-        return false;
-    }
-
-
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-
-    return true;
-}
-
-void close()
-{
-    SDL_DestroyRenderer(gameRenderer);
-    SDL_DestroyWindow(gameWindow);
-    gameWindow = NULL;
-    gameRenderer = NULL;
-}
+SDL_Window* gameWindow;
+SDL_Renderer* gameRenderer;
 
 int main(int argc, char *args[])
 {
-    if (!init())
+    if (!grains::init(&gameWindow, &gameRenderer, screenGeometry.w, screenGeometry.h))
     {
         printf("Failed to initialize!\n");
         return 0;
@@ -177,6 +115,8 @@ int main(int argc, char *args[])
             deltaTime = SCREEN_TICKS_PER_FRAME;
         }
     }
+
+    grains::close(gameWindow, gameRenderer);
 
     return 0;
 }

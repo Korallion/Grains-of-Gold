@@ -1,4 +1,4 @@
-#include "classes/Player.h"
+#include "Player.h"
 
 Player::Player()
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "classes/GameTexture.h"
+#include "GameTexture.h"
 #include <SDL2/SDL_ttf.h>
 
 GameTexture::GameTexture()
