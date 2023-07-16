@@ -48,3 +48,25 @@ void updatePlayerPosition(Player* player, const Uint8* keyState, float deltaTime
     player->x += player->currentVelocity * sprint * cos(player->direction);
     player->y += player->currentVelocity * sprint * sin(player->direction);
 }
+
+bool isPlayerColliding(Player* player, Entity* entity) {
+    bool isColliding = true;
+
+    if (player->x + player->width < entity->x) {
+        isColliding = false;
+    }
+
+    if (player->x > entity->x + entity->width) {
+        isColliding = false;
+    }
+    
+    if (player->y + player->height < entity->y) {
+        isColliding = false;
+    }
+
+    if (player->y > entity->y + entity->height) {
+        isColliding = false;
+    }
+
+    return isColliding;
+}

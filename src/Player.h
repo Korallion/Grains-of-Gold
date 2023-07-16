@@ -1,5 +1,6 @@
 #pragma once
 #include "GameTexture.h"
+#include "Entities.h"
 #include <string>
 
 typedef struct {
@@ -14,3 +15,5 @@ typedef struct {
 void renderPlayer(Player* player, SDL_Renderer* renderer , SDL_Rect* cameraRect);
 
 void updatePlayerPosition(Player* player, const Uint8* keyState, float deltaTime);
+
+bool isPlayerColliding(Player* player, Entity* entity);
