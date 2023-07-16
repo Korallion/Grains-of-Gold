@@ -13,13 +13,13 @@ const int BACKGROUND_H = 1080;
 const int CAMERA_W = 1280;
 const int CAMERA_H = 720;
 
-SDL_Rect screenGeometry = { SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720 };
+SDL_Rect screenGeometry = {SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720};
 
 const int SCREEN_FPS = 60;
 const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 
-SDL_Window* gameWindow;
-SDL_Renderer* gameRenderer;
+SDL_Window *gameWindow;
+SDL_Renderer *gameRenderer;
 
 int main(int argc, char *args[])
 {
@@ -35,7 +35,7 @@ int main(int argc, char *args[])
 
     Player player;
     player.texture = loadTextureFromFile(gameRenderer, "sprites/player_sprite.png");
-    player.x = (BACKGROUND_W - player.width)/ 2;
+    player.x = (BACKGROUND_W - player.width) / 2;
     player.y = (BACKGROUND_H - player.height) / 2;
     player.direction = 0;
     player.maxVelocity = 2;
@@ -45,14 +45,14 @@ int main(int argc, char *args[])
     background.height = BACKGROUND_H;
 
     GameTexture text;
-    TTF_Font* debugFont = loadTTF("ttf/fixed_01.ttf");
+    TTF_Font *debugFont = loadTTF("ttf/fixed_01.ttf");
     SDL_Color textColor = {0, 0, 0};
 
     Entity barrier;
     barrier.texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
     barrier.x = 0;
     barrier.y = 0;
-    barrier.width = 100;
+    barrier.width = 700;
     barrier.height = 300;
 
     Entity wall;
@@ -89,6 +89,29 @@ int main(int argc, char *args[])
         updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
         cameraPositionX = player.x - (CAMERA_W - player.width) / 2;
         cameraPositionY = player.y - (CAMERA_H - player.height) / 2;
+
+        bool barrierColliding = isPlayerColliding(&player, &barrier);
+
+        if (barrierColliding)
+        {
+            barrier.texture = loadTextureFromFile(gameRenderer, "sprites/purple.png");
+        }
+        else
+        {
+            barrier.texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+        }
+
+
+        bool wallColliding = isPlayerColliding(&player, &wall);
+
+        if (wallColliding)
+        {
+            wall.texture = loadTextureFromFile(gameRenderer, "sprites/purple.png");
+        }
+        else
+        {
+            wall.texture = loadTextureFromFile(gameRenderer, "sprites/green.png");
+        }
 
         SDL_Rect cameraRect = {cameraPositionX, cameraPositionY, CAMERA_W, CAMERA_H};
 

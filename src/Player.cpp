@@ -50,23 +50,21 @@ void updatePlayerPosition(Player* player, const Uint8* keyState, float deltaTime
 }
 
 bool isPlayerColliding(Player* player, Entity* entity) {
-    bool isColliding = true;
-
     if (player->x + player->width < entity->x) {
-        isColliding = false;
+        return false;
     }
 
     if (player->x > entity->x + entity->width) {
-        isColliding = false;
+        return false;
     }
     
     if (player->y + player->height < entity->y) {
-        isColliding = false;
+        return false;
     }
 
     if (player->y > entity->y + entity->height) {
-        isColliding = false;
+        return false;
     }
 
-    return isColliding;
+    return true;
 }
