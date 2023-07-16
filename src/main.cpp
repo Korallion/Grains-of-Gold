@@ -1,3 +1,4 @@
+#pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <string>
@@ -32,19 +33,34 @@ int main(int argc, char *args[])
 
     SDL_Event e;
 
-    Player *player = new Player();
-    player->texture->loadFromFile(gameRenderer, "sprites/player_sprite.png");
-    player->pos_x = (BACKGROUND_W - player->texture->width) / 2;
-    player->pos_y = (BACKGROUND_H - player->texture->height) / 2;
+    Player player;
+    player.texture = loadTextureFromFile(gameRenderer, "sprites/player_sprite.png");
+    player.x = (BACKGROUND_W - player.width)/ 2;
+    player.y = (BACKGROUND_H - player.height) / 2;
+    player.direction = 0;
+    player.maxVelocity = 2;
 
-    GameTexture background;
-    background.loadFromFile(gameRenderer, "sprites/simple_background.png");
+    GameTexture background = loadTextureFromFile(gameRenderer, "sprites/simple_background.png");
     background.width = BACKGROUND_W;
     background.height = BACKGROUND_H;
 
-    GameTexture textRender;
-    textRender.loadTTF("ttf/fixed_01.ttf");
+    GameTexture text;
+    TTF_Font* debugFont = loadTTF("ttf/fixed_01.ttf");
     SDL_Color textColor = {0, 0, 0};
+
+    Entity barrier;
+    barrier.texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    barrier.x = 0;
+    barrier.y = 0;
+    barrier.width = 100;
+    barrier.height = 300;
+
+    Entity wall;
+    wall.texture = loadTextureFromFile(gameRenderer, "sprites/green.png");
+    wall.x = 1200;
+    wall.y = 300;
+    wall.width = 400;
+    wall.height = 800;
 
     int cameraPositionX;
     int cameraPositionY;
@@ -70,28 +86,35 @@ int main(int argc, char *args[])
         SDL_SetRenderDrawColor(gameRenderer, 0xFF, 0xFF, 0xFF, 0XFF);
         SDL_RenderClear(gameRenderer);
 
-        player->positionUpdate(SDL_GetKeyboardState(NULL), deltaTime);
-        cameraPositionX = player->pos_x - (CAMERA_W - player->texture->width) / 2;
-        cameraPositionY = player->pos_y - (CAMERA_H - player->texture->width) / 2;
+        updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
+        cameraPositionX = player.x - (CAMERA_W - player.width) / 2;
+        cameraPositionY = player.y - (CAMERA_H - player.height) / 2;
 
         SDL_Rect cameraRect = {cameraPositionX, cameraPositionY, CAMERA_W, CAMERA_H};
 
-        background.renderToCamera(gameRenderer, 0, 0, &cameraRect);
+        renderTextureToCamera(gameRenderer, &background, 0, 0, &cameraRect);
+        renderEntity(&barrier, gameRenderer, &cameraRect);
+        renderEntity(&wall, gameRenderer, &cameraRect);
 
-        player->renderPlayer(gameRenderer, &cameraRect);
+        renderPlayer(&player, gameRenderer, &cameraRect);
 
-        // Top right corner player data
-        textRender.loadFromText(gameRenderer, "X: " + std::to_string(player->pos_x) + "  Y: " + std::to_string(player->pos_y), textColor);
-        textRender.render(gameRenderer, 10, 10, NULL);
+        // Top right corner game data
+        std::string playerCoordinates = "X: " + std::to_string(player.x) + "  Y: " + std::to_string(player.y);
+        std::string fpsDisplay = "FPS: " + std::to_string(avgFPS);
+        std::string timePassed = "Time Passed: " + std::to_string(SDL_GetTicks() / 1000.f) + " s";
+        std::string framesRendered = "Frames Rendered: " + std::to_string(frameCount);
 
-        textRender.loadFromText(gameRenderer, "FPS: " + std::to_string(avgFPS), textColor);
-        textRender.render(gameRenderer, 10, 40, NULL);
+        text = createTextureFromText(gameRenderer, debugFont, playerCoordinates, textColor);
+        renderTexture(gameRenderer, &text, 10, 10, NULL);
 
-        textRender.loadFromText(gameRenderer, "Time Passed: " + std::to_string(SDL_GetTicks() / 1000.f) + " s", textColor);
-        textRender.render(gameRenderer, 10, 70, NULL);
+        text = createTextureFromText(gameRenderer, debugFont, fpsDisplay, textColor);
+        renderTexture(gameRenderer, &text, 10, 40, NULL);
 
-        textRender.loadFromText(gameRenderer, "Frames Rendered: " + std::to_string(frameCount), textColor);
-        textRender.render(gameRenderer, 10, 100, NULL);
+        text = createTextureFromText(gameRenderer, debugFont, timePassed, textColor);
+        renderTexture(gameRenderer, &text, 10, 70, NULL);
+
+        text = createTextureFromText(gameRenderer, debugFont, framesRendered, textColor);
+        renderTexture(gameRenderer, &text, 10, 100, NULL);
 
         if (frameStartTime - relativeTime > 200)
         {

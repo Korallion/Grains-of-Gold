@@ -1,57 +1,50 @@
 #include "Player.h"
 
-Player::Player()
+void renderPlayer(Player* player, SDL_Renderer* renderer , SDL_Rect* cameraRect)
 {
-    pos_x = 0;
-    pos_y = 0;
+    SDL_Rect textureRect = {0, 0, player->texture.width, player->texture.height};
+    SDL_Rect destinationRect = {player->x - cameraRect->x, player->y - cameraRect->y, player->width, player->height};
 
-    vel_x = 0.25;
-    vel_y = 0.25;
+    SDL_RenderCopy(renderer, player->texture.value, &textureRect, &destinationRect);
+};
 
-    texture = new GameTexture();
-}
-
-Player::~Player()
+void updatePlayerPosition(Player* player, const Uint8* keyState, float deltaTime)
 {
-
-}
-
-void Player::renderPlayer( SDL_Renderer* renderer , SDL_Rect* cameraRect)
-{
-    texture->renderToCamera( renderer, pos_x, pos_y, cameraRect);
-}
-
-void Player::positionUpdate( const Uint8* keyState, float deltaTime)
-{
+    int8_t vertical = 0;
+    int8_t horizontal = 0;
     float sprint = 1;
-    float diagonal = 1;
 
     if (keyState[SDL_SCANCODE_LSHIFT]){
         sprint = 1.8;
     }
-    
-    // Fun check to see if player is moving diagonally, if so, we slow them down
-    if (((keyState[SDL_SCANCODE_A] || keyState[SDL_SCANCODE_D]) && keyState[SDL_SCANCODE_W]) || ((keyState[SDL_SCANCODE_A] || keyState[SDL_SCANCODE_D]) && keyState[SDL_SCANCODE_S])){
-        diagonal = 1/ 1.4;
+
+    // find direction of player
+    if (keyState[SDL_SCANCODE_D]) {
+        horizontal += 1;
     }
 
-    //Check x direction
-    if (keyState[SDL_SCANCODE_A])
-    {
-        pos_x -= vel_x * sprint * diagonal * deltaTime;
-    }
-    else if (keyState[SDL_SCANCODE_D])
-    {
-        pos_x += vel_x * sprint * diagonal * deltaTime;
+    if (keyState[SDL_SCANCODE_A]) {
+        horizontal -= 1;
     }
 
-    // Y direction next
-    if ( keyState[SDL_SCANCODE_S])
-    {
-        pos_y += vel_y * sprint * diagonal * deltaTime;
+    if (keyState[SDL_SCANCODE_S]) {
+        vertical += 1;
     }
-    else if (keyState[SDL_SCANCODE_W])
-    {
-        pos_y -= vel_y * sprint * diagonal * deltaTime;
-    }    
+
+    if (keyState[SDL_SCANCODE_W]) {
+        vertical -= 1;
+    }
+
+    if (vertical != 0 || horizontal != 0) {
+        player->direction = atan2(vertical, horizontal);
+    }
+
+    if (vertical == 0 && horizontal == 0)  {
+        player->currentVelocity = 0;
+    } else {
+        player->currentVelocity = player->maxVelocity;
+    }
+
+    player->x += player->currentVelocity * sprint * cos(player->direction);
+    player->y += player->currentVelocity * sprint * sin(player->direction);
 }

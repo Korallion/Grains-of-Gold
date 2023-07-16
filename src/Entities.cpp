@@ -1,20 +1,20 @@
-#include "Entity.h"
+#include "Entities.h"
 
-void renderEntity(SDL_Renderer *renderer, Entity *entity, int camera_x, int camera_y)
+void renderEntity(Entity *entity, SDL_Renderer *renderer, SDL_Rect* cameraRect)
 {
-    SDL_Rect textureRect = {0, 0, entity->width, entity->height};
-    SDL_Rect destinationRect = {entity->x - camera_x, entity->y - camera_y, entity->width, entity->height};
+    SDL_Rect textureRect = {0, 0, entity->texture.width, entity->texture.height};
+    SDL_Rect destinationRect = {entity->x - cameraRect->x, entity->y - cameraRect->y, entity->width, entity->height};
 
-    SDL_RenderCopy(renderer, entity->texture, &textureRect, &destinationRect);
+    SDL_RenderCopy(renderer, entity->texture.value, &textureRect, &destinationRect);
 };
 
-void moveEntity(Entity* mover) {
+void moveEntity(Mover* mover) {
     if (mover->currentVelocity == 0) {
         return;
     }
 
-    mover->x += mover->currentVelocity * cos(mover->direction);
-    mover->y += mover->currentVelocity * sin(mover->direction);
+    mover->entity->x += mover->currentVelocity * cos(mover->direction);
+    mover->entity->y += mover->currentVelocity * sin(mover->direction);
 }
 
 // bool isCollidingRectangular(Entity *moverEntity, Entity *stationaryEntity)

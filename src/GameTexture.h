@@ -4,25 +4,17 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-class GameTexture {
-    public:
-        GameTexture();
-        ~GameTexture();
-
-        bool loadTTF( char* filepath );
-
-        bool loadFromFile( SDL_Renderer* renderer, std::string path );
-
-        bool loadFromText( SDL_Renderer* renderer,std::string text, SDL_Color color);
-
-        void free();
-
-        void render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip );
-
-        void renderToCamera( SDL_Renderer *renderer, int x, int y, SDL_Rect* cameraRect);
-
-        SDL_Texture* tTexture;
-        int width;
-        int height;
-        TTF_Font* font;
+struct GameTexture{
+    SDL_Texture* value;
+    int width, height;
 };
+
+TTF_Font* loadTTF(char *filepath);
+
+GameTexture loadTextureFromFile(SDL_Renderer *renderer, std::string path);
+
+GameTexture createTextureFromText(SDL_Renderer *renderer, TTF_Font* font, std::string text, SDL_Color color);
+
+void renderTexture(SDL_Renderer *renderer, GameTexture* inputTexture, int x, int y, SDL_Rect *sourceRect);
+
+void renderTextureToCamera(SDL_Renderer *renderer, GameTexture* inputTexture, int x, int y, SDL_Rect *cameraRect);

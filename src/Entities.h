@@ -5,17 +5,22 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include "GameTexture.h"
 
 struct Entity
 {
     int x, y, width, height;
-    float direction, currentVelocity, maxVelocity;
-
-    SDL_Texture* texture;
+    GameTexture texture;
 };
 
-void renderEntity(SDL_Renderer* renderer, Entity* entity, int camera_x, int camera_y);
+struct Mover
+{
+    Entity* entity;
+    float direction, currentVelocity, maxVelocity;
+};
 
-void moveEntity(Entity* mover);
+void renderEntity(Entity *entity, SDL_Renderer *renderer, SDL_Rect* cameraRect);
+
+void moveEntity(Mover* mover);
 
 // void handleRectangularCollision(Entity *moverEntity, Entity *stationaryEntity);
