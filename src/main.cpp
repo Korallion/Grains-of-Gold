@@ -7,8 +7,6 @@
 #include <sstream>
 #include "include_list.h"
 
-struct Point {int x, y;};
-
 const int BACKGROUND_W = 1920;
 const int BACKGROUND_H = 1080;
 
@@ -40,7 +38,6 @@ int main(int argc, char *args[])
     player.x = (BACKGROUND_W - player.width) / 2;
     player.y = (BACKGROUND_H - player.height) / 2;
     player.direction = 0;
-    player.maxVelocity = 2;
 
     GameTexture background = loadTextureFromFile(gameRenderer, "sprites/simple_background.png");
     background.width = BACKGROUND_W;
@@ -56,13 +53,6 @@ int main(int argc, char *args[])
     barrier.y = 0;
     barrier.width = 700;
     barrier.height = 300;
-
-    Entity wall;
-    wall.texture = loadTextureFromFile(gameRenderer, "sprites/green.png");
-    wall.x = 1200;
-    wall.y = 300;
-    wall.width = 400;
-    wall.height = 800;
 
     int cameraPositionX;
     int cameraPositionY;
@@ -94,33 +84,32 @@ int main(int argc, char *args[])
 
         updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
 
-        bool barrierColliding = isPlayerColliding(&player, &barrier);
+        int barrierColliding = isPlayerColliding(&player, &oldPlayerPosition, &barrier);
 
-        if (barrierColliding)
+        if (barrierColliding == COLLIDING_RIGHT)
         {
             player.x = oldPlayerPosition.x;
+        }
+        if (barrierColliding == COLLIDING_LEFT)
+        {
+            player.x = oldPlayerPosition.x;
+        }
+        if (barrierColliding == COLLIDING_DOWN)
+        {
+            player.y = oldPlayerPosition.y;
+        }
+        if (barrierColliding == COLLIDING_UP)
+        {
             player.y = oldPlayerPosition.y;
         }
 
         cameraPositionX = player.x - (CAMERA_W - player.width) / 2;
         cameraPositionY = player.y - (CAMERA_H - player.height) / 2;
 
-        bool wallColliding = isPlayerColliding(&player, &wall);
-
-        if (wallColliding)
-        {
-            wall.texture = loadTextureFromFile(gameRenderer, "sprites/purple.png");
-        }
-        else
-        {
-            wall.texture = loadTextureFromFile(gameRenderer, "sprites/green.png");
-        }
-
         SDL_Rect cameraRect = {cameraPositionX, cameraPositionY, CAMERA_W, CAMERA_H};
 
         renderTextureToCamera(gameRenderer, &background, 0, 0, &cameraRect);
         renderEntity(&barrier, gameRenderer, &cameraRect);
-        renderEntity(&wall, gameRenderer, &cameraRect);
 
         renderPlayer(&player, gameRenderer, &cameraRect);
 
@@ -128,7 +117,8 @@ int main(int argc, char *args[])
         std::string playerCoordinates = "X: " + std::to_string(player.x) + "  Y: " + std::to_string(player.y);
         std::string fpsDisplay = "FPS: " + std::to_string(avgFPS);
         std::string timePassed = "Time Passed: " + std::to_string(SDL_GetTicks() / 1000.f) + " s";
-        std::string framesRendered = "Frames Rendered: " + std::to_string(frameCount);
+        std::string playerDirection = "Player direction: " + std::to_string(player.direction);
+        std::string playerSpeed = "Player speed x: " + std::to_string(player.x - oldPlayerPosition.x) + "\nPlayer speed y: " + std::to_string(player.y - oldPlayerPosition.y);
 
         text = createTextureFromText(gameRenderer, debugFont, playerCoordinates, textColor);
         renderTexture(gameRenderer, &text, 10, 10, NULL);
@@ -139,8 +129,11 @@ int main(int argc, char *args[])
         text = createTextureFromText(gameRenderer, debugFont, timePassed, textColor);
         renderTexture(gameRenderer, &text, 10, 70, NULL);
 
-        text = createTextureFromText(gameRenderer, debugFont, framesRendered, textColor);
+        text = createTextureFromText(gameRenderer, debugFont, playerDirection, textColor);
         renderTexture(gameRenderer, &text, 10, 100, NULL);
+
+        text = createTextureFromText(gameRenderer, debugFont, playerSpeed, textColor);
+        renderTexture(gameRenderer, &text, 10, 130, NULL);
 
         if (frameStartTime - relativeTime > 200)
         {
