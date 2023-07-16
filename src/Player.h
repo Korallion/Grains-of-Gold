@@ -5,17 +5,25 @@
 
 typedef struct {
     int x, y;
-    int width = 16;
-    int height = 32;
-    float maxVelocity = 5;
+    int width = 48;
+    int height = 96;
+    float maxVelocity = 8;
     float direction, currentVelocity;
     GameTexture texture;
 } Player;
 
-void renderPlayer(Player* player, SDL_Renderer* renderer , SDL_Rect* cameraRect);
+enum Collisions {
+    NOT_COLLIDING,
+    COLLIDING_RIGHT,
+    COLLIDING_LEFT,
+    COLLIDING_DOWN,
+    COLLIDING_UP
+};
 
-// Point getNewPlayerPosition(Player* player, const Uint8* keyState, float deltaTime);
+struct Point {int x, y;};
+
+void renderPlayer(Player* player, SDL_Renderer* renderer , SDL_Rect* cameraRect);
 
 void updatePlayerPosition(Player* player, const Uint8* keyState, float deltaTime);
 
-bool isPlayerColliding(Player* player, Entity* entity);
+int isPlayerColliding(Player* player, Point* oldPosition, Entity* entity);
