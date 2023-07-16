@@ -14,6 +14,8 @@ typedef struct {
 
 void renderPlayer(Player* player, SDL_Renderer* renderer , SDL_Rect* cameraRect);
 
+// Point getNewPlayerPosition(Player* player, const Uint8* keyState, float deltaTime);
+
 void updatePlayerPosition(Player* player, const Uint8* keyState, float deltaTime);
 
 bool isPlayerColliding(Player* player, Entity* entity);

@@ -7,6 +7,8 @@
 #include <sstream>
 #include "include_list.h"
 
+struct Point {int x, y;};
+
 const int BACKGROUND_W = 1920;
 const int BACKGROUND_H = 1080;
 
@@ -86,21 +88,22 @@ int main(int argc, char *args[])
         SDL_SetRenderDrawColor(gameRenderer, 0xFF, 0xFF, 0xFF, 0XFF);
         SDL_RenderClear(gameRenderer);
 
+        Point oldPlayerPosition;
+        oldPlayerPosition.x = player.x;
+        oldPlayerPosition.y = player.y;
+
         updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
-        cameraPositionX = player.x - (CAMERA_W - player.width) / 2;
-        cameraPositionY = player.y - (CAMERA_H - player.height) / 2;
 
         bool barrierColliding = isPlayerColliding(&player, &barrier);
 
         if (barrierColliding)
         {
-            barrier.texture = loadTextureFromFile(gameRenderer, "sprites/purple.png");
-        }
-        else
-        {
-            barrier.texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+            player.x = oldPlayerPosition.x;
+            player.y = oldPlayerPosition.y;
         }
 
+        cameraPositionX = player.x - (CAMERA_W - player.width) / 2;
+        cameraPositionY = player.y - (CAMERA_H - player.height) / 2;
 
         bool wallColliding = isPlayerColliding(&player, &wall);
 
