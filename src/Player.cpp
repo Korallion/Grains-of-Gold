@@ -10,6 +10,7 @@ void renderPlayer(Player *player, SDL_Renderer *renderer, SDL_Rect *cameraRect)
 
 void updatePlayerPosition(Player *player, const Uint8 *keyState, float deltaTime)
 {
+
     int vertical = 0;
     int horizontal = 0;
     float sprint = 1;

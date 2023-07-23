@@ -47,6 +47,25 @@ int main(int argc, char *args[])
     TTF_Font *debugFont = loadTTF("ttf/fixed_01.ttf");
     SDL_Color textColor = {0, 0, 0};
 
+    Entity barriers[12];
+    barriers[0].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    barriers[0].x = 0;
+    barriers[0].y = 0;
+    barriers[0].width = 200;
+    barriers[0].height = 1000;
+
+    barriers[1].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    barriers[1].x = 1000;
+    barriers[1].y = 0;
+    barriers[1].width = 200;
+    barriers[1].height = 1000;
+
+    barriers[2].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    barriers[2].x = 0;
+    barriers[2].y = 0;
+    barriers[2].width = 2000;
+    barriers[2].height = 100;
+
     Entity barrier;
     barrier.texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
     barrier.x = 0;
@@ -83,22 +102,30 @@ int main(int argc, char *args[])
         oldPlayerPosition.y = player.y;
 
         updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
+        bool isCollidingHorizontally = false;
+        bool isCollidingVertically = false;
 
-        int barrierColliding = isPlayerColliding(&player, &oldPlayerPosition, &barrier);
+        for (int i = 0; i < 3; i++)
+        {
+            int collisionState = isPlayerColliding(&player, &oldPlayerPosition, &barriers[i]);
 
-        if (barrierColliding == COLLIDING_RIGHT)
+            if (!isCollidingHorizontally && collisionState == COLLIDING_RIGHT || collisionState == COLLIDING_LEFT)
+            {
+                isCollidingHorizontally = true;
+            }
+
+            if (!isCollidingVertically && collisionState == COLLIDING_DOWN || collisionState == COLLIDING_UP)
+            {
+                isCollidingVertically = true;
+            }
+        }
+
+        if (isCollidingHorizontally)
         {
             player.x = oldPlayerPosition.x;
         }
-        if (barrierColliding == COLLIDING_LEFT)
-        {
-            player.x = oldPlayerPosition.x;
-        }
-        if (barrierColliding == COLLIDING_DOWN)
-        {
-            player.y = oldPlayerPosition.y;
-        }
-        if (barrierColliding == COLLIDING_UP)
+
+        if (isCollidingVertically)
         {
             player.y = oldPlayerPosition.y;
         }
@@ -107,9 +134,12 @@ int main(int argc, char *args[])
         cameraPositionY = player.y - (CAMERA_H - player.height) / 2;
 
         SDL_Rect cameraRect = {cameraPositionX, cameraPositionY, CAMERA_W, CAMERA_H};
-
         renderTextureToCamera(gameRenderer, &background, 0, 0, &cameraRect);
-        renderEntity(&barrier, gameRenderer, &cameraRect);
+
+        for (int i = 0; i < 3; i++)
+        {
+            renderEntity(&barriers[i], gameRenderer, &cameraRect);
+        }
 
         renderPlayer(&player, gameRenderer, &cameraRect);
 
