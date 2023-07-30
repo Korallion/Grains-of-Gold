@@ -10,9 +10,6 @@
 const int BACKGROUND_W = 1920;
 const int BACKGROUND_H = 1080;
 
-const int CAMERA_W = 1280;
-const int CAMERA_H = 720;
-
 SDL_Rect screenGeometry = {SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720};
 
 const int SCREEN_FPS = 60;
@@ -50,29 +47,32 @@ int main(int argc, char *args[])
     Entity barriers[12];
     barriers[0].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
     barriers[0].x = 0;
-    barriers[0].y = 0;
-    barriers[0].width = 200;
-    barriers[0].height = 1000;
+    barriers[0].y = -10;
+    barriers[0].width = 1920;
+    barriers[0].height = 10;
 
     barriers[1].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
-    barriers[1].x = 1000;
-    barriers[1].y = 0;
-    barriers[1].width = 200;
-    barriers[1].height = 1000;
+    barriers[1].x = 0;
+    barriers[1].y = 1080;
+    barriers[1].width = 1920;
+    barriers[1].height = 10;
 
     barriers[2].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
-    barriers[2].x = 0;
+    barriers[2].x = -10;
     barriers[2].y = 0;
-    barriers[2].width = 2000;
-    barriers[2].height = 100;
+    barriers[2].width = 10;
+    barriers[2].height = 1080;
 
-    Entity barrier;
-    barrier.texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
-    barrier.x = 0;
-    barrier.y = 0;
-    barrier.width = 700;
-    barrier.height = 300;
+    barriers[3].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    barriers[3].x = 1920;
+    barriers[3].y = 0;
+    barriers[3].width = 10;
+    barriers[3].height = 1080;
 
+    int barriersIndex = 4;
+
+    const int CAMERA_W = 1280;
+    const int CAMERA_H = 720;
     int cameraPositionX;
     int cameraPositionY;
 
@@ -105,7 +105,7 @@ int main(int argc, char *args[])
         bool isCollidingHorizontally = false;
         bool isCollidingVertically = false;
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < barriersIndex; i++)
         {
             int collisionState = isPlayerColliding(&player, &oldPlayerPosition, &barriers[i]);
 
@@ -136,7 +136,7 @@ int main(int argc, char *args[])
         SDL_Rect cameraRect = {cameraPositionX, cameraPositionY, CAMERA_W, CAMERA_H};
         renderTextureToCamera(gameRenderer, &background, 0, 0, &cameraRect);
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < barriersIndex; i++)
         {
             renderEntity(&barriers[i], gameRenderer, &cameraRect);
         }

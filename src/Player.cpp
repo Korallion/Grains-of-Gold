@@ -111,4 +111,6 @@ int isPlayerColliding(Player *player, Point *oldPosition, Entity *entity)
     {
         return COLLIDING_UP;
     }
+
+    return NOT_COLLIDING;
 }
