@@ -26,4 +26,6 @@ void renderPlayer(Player* player, SDL_Renderer* renderer , SDL_Rect* cameraRect)
 
 void updatePlayerPosition(Player* player, const Uint8* keyState, float deltaTime);
 
-int isPlayerColliding(Player* player, Point* oldPosition, Entity* entity);
+int getCollisionState(Player* player, Point* oldPosition, Entity* entity);
+
+void applyCollisionState(int collisionState, Player *player, Entity *entity);

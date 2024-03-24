@@ -102,32 +102,11 @@ int main(int argc, char *args[])
         oldPlayerPosition.y = player.y;
 
         updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
-        bool isCollidingHorizontally = false;
-        bool isCollidingVertically = false;
 
         for (int i = 0; i < barriersIndex; i++)
         {
-            int collisionState = isPlayerColliding(&player, &oldPlayerPosition, &barriers[i]);
-
-            if (!isCollidingHorizontally && collisionState == COLLIDING_RIGHT || collisionState == COLLIDING_LEFT)
-            {
-                isCollidingHorizontally = true;
-            }
-
-            if (!isCollidingVertically && collisionState == COLLIDING_DOWN || collisionState == COLLIDING_UP)
-            {
-                isCollidingVertically = true;
-            }
-        }
-
-        if (isCollidingHorizontally)
-        {
-            player.x = oldPlayerPosition.x;
-        }
-
-        if (isCollidingVertically)
-        {
-            player.y = oldPlayerPosition.y;
+            int collisionState = getCollisionState(&player, &oldPlayerPosition, &barriers[i]);
+            applyCollisionState(collisionState, &player, &barriers[i]);
         }
 
         cameraPositionX = player.x - (CAMERA_W - player.width) / 2;
