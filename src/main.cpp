@@ -44,32 +44,32 @@ int main(int argc, char *args[])
     TTF_Font *debugFont = loadTTF("ttf/fixed_01.ttf");
     SDL_Color textColor = {0, 0, 0};
 
-    // Entity barriers[12];
-    // barriers[0].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
-    // barriers[0].x = 0;
-    // barriers[0].y = -10;
-    // barriers[0].width = 1920;
-    // barriers[0].height = 10;
+    Entity barriers[12];
+    barriers[0].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    barriers[0].x = 0;
+    barriers[0].y = -10;
+    barriers[0].width = 1920;
+    barriers[0].height = 10;
 
-    // barriers[1].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
-    // barriers[1].x = 0;
-    // barriers[1].y = 1080;
-    // barriers[1].width = 1920;
-    // barriers[1].height = 10;
+    barriers[1].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    barriers[1].x = 0;
+    barriers[1].y = 1080;
+    barriers[1].width = 1920;
+    barriers[1].height = 10;
 
-    // barriers[2].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
-    // barriers[2].x = -10;
-    // barriers[2].y = 0;
-    // barriers[2].width = 10;
-    // barriers[2].height = 1080;
+    barriers[2].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    barriers[2].x = -10;
+    barriers[2].y = 0;
+    barriers[2].width = 10;
+    barriers[2].height = 1080;
 
-    // barriers[3].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
-    // barriers[3].x = 1920;
-    // barriers[3].y = 0;
-    // barriers[3].width = 10;
-    // barriers[3].height = 1080;
+    barriers[3].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    barriers[3].x = 1920;
+    barriers[3].y = 0;
+    barriers[3].width = 10;
+    barriers[3].height = 1080;
 
-    // int barriersIndex = 4;
+    int barriersIndex = 4;
 
     const int CAMERA_W = 1280;
     const int CAMERA_H = 720;
@@ -115,10 +115,10 @@ int main(int argc, char *args[])
         SDL_Rect cameraRect = {cameraPositionX, cameraPositionY, CAMERA_W, CAMERA_H};
         renderTextureToCamera(gameRenderer, &background, 0, 0, &cameraRect);
 
-        // for (int i = 0; i < barriersIndex; i++)
-        // {
-        //     renderEntity(&barriers[i], gameRenderer, &cameraRect);
-        // }
+        for (int i = 0; i < barriersIndex; i++)
+        {
+            renderEntity(&barriers[i], gameRenderer, &cameraRect);
+        }
 
         renderPlayer(&player, gameRenderer, &cameraRect);
 
