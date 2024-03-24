@@ -55,7 +55,7 @@ void updatePlayerPosition(Player *player, const Uint8 *keyState, float deltaTime
     player->y += round(player->currentVelocity * sprint * sin(player->direction));
 };
 
-int isPlayerColliding(Player *player, Point *oldPosition, Entity *entity)
+int getCollisionState(Player *player, Point *oldPosition, Entity *entity)
 {
     if (player->x + player->width < entity->x)
     {
@@ -83,6 +83,7 @@ int isPlayerColliding(Player *player, Point *oldPosition, Entity *entity)
 
     if (distanceRightBefore * distanceRightAfter < 0 || distanceRightBefore == 0)
     {
+        player->x = entity->x - player->width;
         return COLLIDING_RIGHT;
     }
 
@@ -92,6 +93,7 @@ int isPlayerColliding(Player *player, Point *oldPosition, Entity *entity)
 
     if (distanceLeftBefore * distanceLeftAfter < 0 || distanceLeftBefore == 0)
     {
+        player->x = entity->x + entity->width;
         return COLLIDING_LEFT;
     }
 
@@ -101,16 +103,38 @@ int isPlayerColliding(Player *player, Point *oldPosition, Entity *entity)
 
     if (distanceDownBefore * distanceDownAfter < 0 || distanceDownBefore == 0)
     {
+        player->y = entity->y - player->height;
         return COLLIDING_DOWN;
     }
 
+    // Colliding up check
     int distanceUpBefore = entity->y + entity->height - oldPosition->y;
     int distanceUpAfter = entity->y + entity->height - player->y;
 
     if (distanceUpBefore * distanceUpAfter < 0 || distanceUpBefore == 0)
     {
+        player->y = entity->y + entity->height;
         return COLLIDING_UP;
     }
 
     return NOT_COLLIDING;
+}
+
+void applyCollisionState(int collisionState, Player *player, Entity *entity) {
+    switch(collisionState) {
+        case NOT_COLLIDING:
+            break;
+        case COLLIDING_RIGHT:
+            player->x = entity->x - player->width;
+            break;
+        case COLLIDING_LEFT:
+            player->x = entity->x + entity->width;
+            break;
+        case COLLIDING_UP:
+            player->y = entity->y + entity->height;
+            break;
+        case COLLIDING_DOWN:
+            player->y = entity->y - player->height;
+            break;
+    }
 }
