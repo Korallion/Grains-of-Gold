@@ -77,7 +77,7 @@ int main(int argc, char *args[])
     barriers[3].height = 1080;
     barriers[3].texture = genericTexture;
 
-    loadEntity(&barriers[4]);  
+    loadEntity(&barriers[4], "red_block");
     barriers[4].texture = genericTexture;
 
     int barriersIndex = 5;
@@ -184,7 +184,7 @@ int main(int argc, char *args[])
     }
 
     savePlayerPosition(&player);
-    saveEntity(&barriers[4]);
+    saveEntity(&barriers[4], "red_block");
     grains::close(gameWindow, gameRenderer);
 
     return 0;

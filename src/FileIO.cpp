@@ -1,7 +1,8 @@
 #include "FileIO.h"
 
-void saveEntity(Entity* entity) {
-    SDL_RWops* file = SDL_RWFromFile( "src/data/red_block.bin", "wb" );
+void saveEntity(Entity* entity, std::string filePath) {
+    std::string savePath = "src/data/" + filePath + ".bin";
+    SDL_RWops* file = SDL_RWFromFile(savePath.c_str(), "wb" );
 
     SDL_RWwrite( file, &entity->x, sizeof( &entity->x), 1 );
     SDL_RWwrite( file, &entity->y, sizeof( &entity->y), 1 );
@@ -11,8 +12,9 @@ void saveEntity(Entity* entity) {
     SDL_RWclose( file );
 };
 
-void loadEntity(Entity* entity) {
-    SDL_RWops* file = SDL_RWFromFile( "src/data/red_block.bin", "rb" );
+void loadEntity(Entity* entity, std::string filePath) {
+    std::string loadPath = "src/data/" + filePath + ".bin";
+    SDL_RWops* file = SDL_RWFromFile( loadPath.c_str(), "rb" );
 
     SDL_RWread( file, &entity->x, sizeof( &entity->x), 1 );
     SDL_RWread( file, &entity->y, sizeof( &entity->y), 1 );
