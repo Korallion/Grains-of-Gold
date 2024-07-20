@@ -49,19 +49,9 @@ int main(int argc, char *args[])
     TTF_Font *debugFont = loadTTF(fontSrc);
     SDL_Color textColor = {0, 0, 0};
 
-    Entity barriers[4];
+    Entity barriers[5];
     const std::string genericTextureSrc = "sprites/red.png";
     const GameTexture genericTexture = loadTextureFromFile(gameRenderer, genericTextureSrc);
-
-    // loadEntityArray(barriers, barrierTextures, gameRenderer);
-
-    // for (int i = 4; i < 8; i++) {
-    //     barriers->texture_source = "sprites/blue.png";
-    //     barrierTextures[i] = loadTextureFromFile(gameRenderer, barriers->texture_source);
-    //     barriers[i].x = 300 * i;
-    //     barriers[i].width = 100 * i;
-    //     barriers[i].height = 100 * i;
-    // };
 
     barriers[0].x = 0;
     barriers[0].y = -10;
@@ -87,7 +77,10 @@ int main(int argc, char *args[])
     barriers[3].height = 1080;
     barriers[3].texture = genericTexture;
 
-    int barriersIndex = 4;
+    loadEntity(&barriers[4]);  
+    barriers[4].texture = genericTexture;
+
+    int barriersIndex = 5;
 
     const int CAMERA_W = 1280;
     const int CAMERA_H = 720;
@@ -191,6 +184,7 @@ int main(int argc, char *args[])
     }
 
     savePlayerPosition(&player);
+    saveEntity(&barriers[4]);
     grains::close(gameWindow, gameRenderer);
 
     return 0;

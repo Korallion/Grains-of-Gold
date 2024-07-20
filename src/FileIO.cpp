@@ -1,26 +1,26 @@
 #include "FileIO.h"
 
-void saveEntityArray(Entity entities[]) {
-    const int sizeOfEntity = sizeof(struct Entity);
-    const int length = sizeof(&entities) / sizeOfEntity;
-    SDL_RWops* file = SDL_RWFromFile( "src/data/entities.bin", "w+b" );
+void saveEntity(Entity* entity) {
+    SDL_RWops* file = SDL_RWFromFile( "src/data/red_block.bin", "wb" );
 
-    SDL_RWwrite( file, &entities, sizeOfEntity, length );
-    
+    SDL_RWwrite( file, &entity->x, sizeof( &entity->x), 1 );
+    SDL_RWwrite( file, &entity->y, sizeof( &entity->y), 1 );
+    SDL_RWwrite( file, &entity->width, sizeof( &entity->width), 1 );
+    SDL_RWwrite( file, &entity->height, sizeof( &entity->height), 1 );
+
     SDL_RWclose( file );
 };
 
-void loadEntityArray(Entity entities[], GameTexture entityTextures[], SDL_Renderer* gameRenderer) {
-    const int sizeOfEntity = sizeof(struct Entity);
-    const int length = 8;
-    SDL_RWops* file = SDL_RWFromFile("src/data/entities.bin", "r+b");
+void loadEntity(Entity* entity) {
+    SDL_RWops* file = SDL_RWFromFile( "src/data/red_block.bin", "rb" );
 
-    for (int i = 4; i < length; i++) {
-        SDL_RWread( file, &entities[i], sizeOfEntity, 1);
-    };
+    SDL_RWread( file, &entity->x, sizeof( &entity->x), 1 );
+    SDL_RWread( file, &entity->y, sizeof( &entity->y), 1 );
+    SDL_RWread( file, &entity->width, sizeof( &entity->width), 1 );
+    SDL_RWread( file, &entity->height, sizeof( &entity->height), 1 );
 
     SDL_RWclose( file );
-}
+};
 
 void savePlayerPosition(Player* player) {
     SDL_RWops* file = SDL_RWFromFile( "src/data/player_position.bin", "wb" );
@@ -30,14 +30,8 @@ void savePlayerPosition(Player* player) {
 }
 
 void loadPlayerPosition(Player* player) {
-    int x;
-    int y;
-
     SDL_RWops* file = SDL_RWFromFile( "src/data/player_position.bin", "rb" );
-    SDL_RWread(file, &x, sizeof(player->x), 1);
-    SDL_RWread(file, &y, sizeof(player->y), 1);
+    SDL_RWread(file, &(player->x), sizeof(player->x), 1);
+    SDL_RWread(file, &(player->y), sizeof(player->y), 1);
     SDL_RWclose( file );
-
-    player->x = x;
-    player->y = y;
 }

@@ -2,9 +2,8 @@
 #include "Entities.h"
 #include "Player.h"
 
-void saveEntityArray(Entity entities[]);
-void loadEntityArray(Entity entities[], GameTexture entityTextures[], SDL_Renderer* gameRenderer);
+void saveEntity(Entity* entity);
+void loadEntity(Entity* entity);
 
 void savePlayerPosition(Player* player);
-
 void loadPlayerPosition(Player* player);
