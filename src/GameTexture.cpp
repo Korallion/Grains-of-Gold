@@ -81,5 +81,5 @@ void renderTextureToCamera(SDL_Renderer *renderer, GameTexture *inputTexture, in
     SDL_Rect textureRect = {0, 0, inputTexture->width, inputTexture->height};
     SDL_Rect destinationRect = {x - cameraRect->x, y - cameraRect->y, inputTexture->width, inputTexture->height};
 
-    SDL_RenderCopy(renderer, inputTexture->value, &textureRect, &destinationRect);
+    SDL_RenderCopy(renderer, inputTexture->value, NULL, &destinationRect);
 }

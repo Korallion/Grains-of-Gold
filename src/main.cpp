@@ -1,10 +1,10 @@
-#pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <string>
 #include <cstdio>
 #include <cmath>
 #include <sstream>
+#include <iostream>
 #include "include_list.h"
 
 const int BACKGROUND_W = 1920;
@@ -36,38 +36,56 @@ int main(int argc, char *args[])
     player.y = (BACKGROUND_H - player.height) / 2;
     player.direction = 0;
 
+    loadPlayerPosition(&player);
+    
+    Point oldPlayerPosition;
+
     GameTexture background = loadTextureFromFile(gameRenderer, "sprites/simple_background.png");
     background.width = BACKGROUND_W;
     background.height = BACKGROUND_H;
 
     GameTexture text;
-    TTF_Font *debugFont = loadTTF("ttf/fixed_01.ttf");
+    char fontSrc[] = "ttf/fixed_01.ttf";
+    TTF_Font *debugFont = loadTTF(fontSrc);
     SDL_Color textColor = {0, 0, 0};
 
-    Entity barriers[12];
-    barriers[0].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    Entity barriers[4];
+    const std::string genericTextureSrc = "sprites/red.png";
+    const GameTexture genericTexture = loadTextureFromFile(gameRenderer, genericTextureSrc);
+
+    // loadEntityArray(barriers, barrierTextures, gameRenderer);
+
+    // for (int i = 4; i < 8; i++) {
+    //     barriers->texture_source = "sprites/blue.png";
+    //     barrierTextures[i] = loadTextureFromFile(gameRenderer, barriers->texture_source);
+    //     barriers[i].x = 300 * i;
+    //     barriers[i].width = 100 * i;
+    //     barriers[i].height = 100 * i;
+    // };
+
     barriers[0].x = 0;
     barriers[0].y = -10;
     barriers[0].width = 1920;
     barriers[0].height = 10;
+    barriers[0].texture = genericTexture;
 
-    barriers[1].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
     barriers[1].x = 0;
     barriers[1].y = 1080;
     barriers[1].width = 1920;
     barriers[1].height = 10;
+    barriers[1].texture = genericTexture;
 
-    barriers[2].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
     barriers[2].x = -10;
     barriers[2].y = 0;
     barriers[2].width = 10;
     barriers[2].height = 1080;
+    barriers[2].texture = genericTexture;
 
-    barriers[3].texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
     barriers[3].x = 1920;
     barriers[3].y = 0;
     barriers[3].width = 10;
     barriers[3].height = 1080;
+    barriers[3].texture = genericTexture;
 
     int barriersIndex = 4;
 
@@ -75,12 +93,20 @@ int main(int argc, char *args[])
     const int CAMERA_H = 720;
     int cameraPositionX;
     int cameraPositionY;
+    SDL_Rect cameraRect;
 
     float frameCount = 0;
     float avgFPS;
     int frameStartTime;
     float deltaTime = 0;
     int relativeTime = 0;
+
+    std::string playerCoordinates;
+    std::string fpsDisplay;
+    std::string timePassed;
+    std::string playerDirection;
+    std::string playerSpeed;
+
 
     while (!quit)
     {
@@ -97,7 +123,6 @@ int main(int argc, char *args[])
         SDL_SetRenderDrawColor(gameRenderer, 0xFF, 0xFF, 0xFF, 0XFF);
         SDL_RenderClear(gameRenderer);
 
-        Point oldPlayerPosition;
         oldPlayerPosition.x = player.x;
         oldPlayerPosition.y = player.y;
 
@@ -111,8 +136,7 @@ int main(int argc, char *args[])
 
         cameraPositionX = player.x - (CAMERA_W - player.width) / 2;
         cameraPositionY = player.y - (CAMERA_H - player.height) / 2;
-
-        SDL_Rect cameraRect = {cameraPositionX, cameraPositionY, CAMERA_W, CAMERA_H};
+        cameraRect = {cameraPositionX, cameraPositionY, CAMERA_W, CAMERA_H};
         renderTextureToCamera(gameRenderer, &background, 0, 0, &cameraRect);
 
         for (int i = 0; i < barriersIndex; i++)
@@ -123,11 +147,11 @@ int main(int argc, char *args[])
         renderPlayer(&player, gameRenderer, &cameraRect);
 
         // Top right corner game data
-        std::string playerCoordinates = "X: " + std::to_string(player.x) + "  Y: " + std::to_string(player.y);
-        std::string fpsDisplay = "FPS: " + std::to_string(avgFPS);
-        std::string timePassed = "Time Passed: " + std::to_string(SDL_GetTicks() / 1000.f) + " s";
-        std::string playerDirection = "Player direction: " + std::to_string(player.direction);
-        std::string playerSpeed = "Player speed x: " + std::to_string(player.x - oldPlayerPosition.x) + "\nPlayer speed y: " + std::to_string(player.y - oldPlayerPosition.y);
+        playerCoordinates = "X: " + std::to_string(player.x) + "  Y: " + std::to_string(player.y);
+        fpsDisplay = "FPS: " + std::to_string(avgFPS);
+        timePassed = "Time Passed: " + std::to_string(SDL_GetTicks() / 1000.f) + " s";
+        playerDirection = "Player direction: " + std::to_string(player.direction);
+        playerSpeed = "Player speed x: " + std::to_string(player.x - oldPlayerPosition.x) + "\nPlayer speed y: " + std::to_string(player.y - oldPlayerPosition.y);
 
         text = createTextureFromText(gameRenderer, debugFont, playerCoordinates, textColor);
         renderTexture(gameRenderer, &text, 10, 10, NULL);
@@ -166,6 +190,7 @@ int main(int argc, char *args[])
         }
     }
 
+    savePlayerPosition(&player);
     grains::close(gameWindow, gameRenderer);
 
     return 0;
