@@ -49,13 +49,17 @@ int main(int argc, char *args[])
     TTF_Font *debugFont = loadTTF(fontSrc);
     SDL_Color textColor = {0, 0, 0};
 
+    const std::string genericTextureSrc = "sprites/red.png";
+    const GameTexture genericTexture = loadTextureFromFile(gameRenderer, genericTextureSrc);
+    std::vector<Entity*> collisionEntities;
+
     Entity walls[4];
     int wallsIndex = 4;
     Entity redBlock;
-    const std::string genericTextureSrc = "sprites/red.png";
 
-    // loadEntityArray(walls, "simple_border", gameRenderer, genericTextureSrc);
-    const GameTexture genericTexture = loadTextureFromFile(gameRenderer, genericTextureSrc);
+    for (int i = 0; i < 4; i++) {
+        collisionEntities.push_back(&walls[i]);
+    }
 
     loadEntityArray(walls, 4, "simple_border", gameRenderer, genericTextureSrc);
     loadEntity(&redBlock, "red_block");
@@ -100,10 +104,10 @@ int main(int argc, char *args[])
 
         updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
 
-        for (int i = 0; i < wallsIndex; i++)
+        for (int i = 0; i < collisionEntities.size(); i++)
         {
-            int collisionState = getCollisionState(&player, &oldPlayerPosition, &walls[i]);
-            applyCollisionState(collisionState, &player, &walls[i]);
+            int collisionState = getCollisionState(&player, &oldPlayerPosition, collisionEntities[i]);
+            applyCollisionState(collisionState, &player, collisionEntities[i]);
         }
 
         cameraPositionX = player.x - (CAMERA_W - player.width) / 2;
