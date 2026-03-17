@@ -40,7 +40,7 @@ int main(int argc, char *args[])
     
     Point oldPlayerPosition;
 
-    GameTexture background = loadTextureFromFile(gameRenderer, "sprites/simple_background.png");
+    GameTexture background = loadTextureFromFile(gameRenderer, "sprites/background_simple.png");
     background.width = BACKGROUND_W;
     background.height = BACKGROUND_H;
 
@@ -49,38 +49,18 @@ int main(int argc, char *args[])
     TTF_Font *debugFont = loadTTF(fontSrc);
     SDL_Color textColor = {0, 0, 0};
 
-    Entity barriers[5];
+    Entity walls[4];
+    int wallsIndex = 4;
+    Entity redBlock;
     const std::string genericTextureSrc = "sprites/red.png";
+
+    // loadEntityArray(walls, "simple_border", gameRenderer, genericTextureSrc);
     const GameTexture genericTexture = loadTextureFromFile(gameRenderer, genericTextureSrc);
 
-    barriers[0].x = 0;
-    barriers[0].y = -10;
-    barriers[0].width = 1920;
-    barriers[0].height = 10;
-    barriers[0].texture = genericTexture;
+    loadEntityArray(walls, 4, "simple_border", gameRenderer, genericTextureSrc);
+    loadEntity(&redBlock, "red_block");
+    redBlock.texture = genericTexture;
 
-    barriers[1].x = 0;
-    barriers[1].y = 1080;
-    barriers[1].width = 1920;
-    barriers[1].height = 10;
-    barriers[1].texture = genericTexture;
-
-    barriers[2].x = -10;
-    barriers[2].y = 0;
-    barriers[2].width = 10;
-    barriers[2].height = 1080;
-    barriers[2].texture = genericTexture;
-
-    barriers[3].x = 1920;
-    barriers[3].y = 0;
-    barriers[3].width = 10;
-    barriers[3].height = 1080;
-    barriers[3].texture = genericTexture;
-
-    loadEntity(&barriers[4], "red_block");
-    barriers[4].texture = genericTexture;
-
-    int barriersIndex = 5;
 
     const int CAMERA_W = 1280;
     const int CAMERA_H = 720;
@@ -99,7 +79,6 @@ int main(int argc, char *args[])
     std::string timePassed;
     std::string playerDirection;
     std::string playerSpeed;
-
 
     while (!quit)
     {
@@ -121,10 +100,10 @@ int main(int argc, char *args[])
 
         updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
 
-        for (int i = 0; i < barriersIndex; i++)
+        for (int i = 0; i < wallsIndex; i++)
         {
-            int collisionState = getCollisionState(&player, &oldPlayerPosition, &barriers[i]);
-            applyCollisionState(collisionState, &player, &barriers[i]);
+            int collisionState = getCollisionState(&player, &oldPlayerPosition, &walls[i]);
+            applyCollisionState(collisionState, &player, &walls[i]);
         }
 
         cameraPositionX = player.x - (CAMERA_W - player.width) / 2;
@@ -132,10 +111,12 @@ int main(int argc, char *args[])
         cameraRect = {cameraPositionX, cameraPositionY, CAMERA_W, CAMERA_H};
         renderTextureToCamera(gameRenderer, &background, 0, 0, &cameraRect);
 
-        for (int i = 0; i < barriersIndex; i++)
+        for (int i = 0; i < wallsIndex; i++)
         {
-            renderEntity(&barriers[i], gameRenderer, &cameraRect);
+            renderEntity(&walls[i], gameRenderer, &cameraRect);
         }
+
+        renderEntity(&redBlock, gameRenderer, &cameraRect);
 
         renderPlayer(&player, gameRenderer, &cameraRect);
 
@@ -184,7 +165,8 @@ int main(int argc, char *args[])
     }
 
     savePlayerPosition(&player);
-    saveEntity(&barriers[4], "red_block");
+    saveEntity(&redBlock, "red_block");
+    saveEntityArray(walls, 4, "simple_border");
     grains::close(gameWindow, gameRenderer);
 
     return 0;
