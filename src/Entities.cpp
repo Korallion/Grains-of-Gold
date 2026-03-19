@@ -3,7 +3,7 @@
 void renderEntity(Entity *entity, SDL_Renderer *renderer, SDL_Rect* cameraRect)
 {
     SDL_Rect textureRect = {0, 0, entity->texture.width, entity->texture.height};
-    SDL_Rect destinationRect = {entity->x - cameraRect->x, entity->y - cameraRect->y, entity->width, entity->height};
+    SDL_Rect destinationRect = getRenderRect(entity, cameraRect);
 
     SDL_RenderCopy(renderer, entity->texture.value, &textureRect, &destinationRect);
 };
@@ -13,29 +13,43 @@ void moveEntity(Mover* mover) {
         return;
     }
 
-    mover->entity->x += mover->currentVelocity * cos(mover->direction);
-    mover->entity->y += mover->currentVelocity * sin(mover->direction);
+    mover->entity->collision_box.x += mover->currentVelocity * cos(mover->direction);
+    mover->entity->collision_box.y += mover->currentVelocity * sin(mover->direction);
 }
 
-// bool isCollidingRectangular(Entity *moverEntity, Entity *stationaryEntity)
-// {
-//     if (moverEntity->x + moverEntity->width <= stationaryEntity->x || stationaryEntity->x + stationaryEntity->width <= moverEntity->x)
-//     {
-//         return 0;
-//     }
+SDL_Rect getRenderRect(Entity* entity, SDL_Rect* cameraRect) {
+    SDL_Rect renderRect;
+    int widthDiff = entity->collision_box.w - entity->texture.width;
+    int heightDiff = entity->collision_box.h - entity->texture.height;
 
-//     if (moverEntity->y + moverEntity->height <= stationaryEntity->y || stationaryEntity->y + stationaryEntity->height <= moverEntity->y)
-//     {
-//         return 0;
-//     }
+    renderRect.x = entity->collision_box.x - cameraRect->x - widthDiff / 2;
+    renderRect.y = entity->collision_box.y - cameraRect->y - heightDiff / 2;
+    renderRect.w = entity->texture.width;
+    renderRect.h = entity->texture.height;
 
-//     return true;
-// };
+    return renderRect;
+}
 
-// void handleRectangularCollision(Entity *moverEntity, Entity *stationaryEntity) {
-//     bool isColliding = isCollidingRectangular(moverEntity, stationaryEntity);
+bool checkRectCollision(SDL_Rect* rectA, SDL_Rect* rectB) {
+    if (rectA->x + rectA->w < rectB->x)
+    {
+        return false;
+    }
 
-//     if (isColliding) {
-//         if ()
-//     }
-// }
+    if (rectA->x > rectB->x + rectB->w)
+    {
+        return false;
+    }
+
+    if (rectA->y + rectA->h < rectB->y)
+    {
+        return false;
+    }
+
+    if (rectA->y > rectB->y + rectB->h)
+    {
+        return false;
+    }
+
+    return true;
+}

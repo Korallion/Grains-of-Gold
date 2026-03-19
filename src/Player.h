@@ -4,12 +4,9 @@
 #include <string>
 
 typedef struct {
-    int x, y;
-    int width = 48;
-    int height = 96;
+    Entity entity;
     float maxVelocity = 8;
     float direction, currentVelocity;
-    GameTexture texture;
 } Player;
 
 enum Collisions {
@@ -20,12 +17,10 @@ enum Collisions {
     COLLIDING_UP
 };
 
-struct Point {int x, y;};
-
 void renderPlayer(Player* player, SDL_Renderer* renderer , SDL_Rect* cameraRect);
 
 void updatePlayerPosition(Player* player, const Uint8* keyState, float deltaTime);
 
-int getCollisionState(Player* player, Point* oldPosition, Entity* entity);
+int getCollisionState(Player* player, SDL_Point* oldPosition, Entity* entity);
 
 void applyCollisionState(int collisionState, Player *player, Entity *entity);
