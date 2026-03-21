@@ -1,5 +1,18 @@
 #include "Entities.h"
 
+SDL_Rect getRenderRect(Entity* entity, SDL_Rect* cameraRect) {
+    SDL_Rect renderRect;
+    // int widthDiff = entity->collision_box.w - entity->texture.width;
+    // int heightDiff = entity->collision_box.h - entity->texture.height;
+
+    renderRect.x = entity->collision_box.x - cameraRect->x;
+    renderRect.y = entity->collision_box.y - cameraRect->y;
+    renderRect.w = entity->collision_box.w;
+    renderRect.h = entity->collision_box.h;
+
+    return renderRect;
+}
+
 void renderEntity(Entity *entity, SDL_Renderer *renderer, SDL_Rect* cameraRect)
 {
     SDL_Rect textureRect = {0, 0, entity->texture.width, entity->texture.height};
@@ -15,19 +28,6 @@ void moveEntity(Mover* mover) {
 
     mover->collision_box.x += mover->velocity * cos(mover->direction);
     mover->collision_box.y += mover->velocity * sin(mover->direction);
-}
-
-SDL_Rect getRenderRect(Entity* entity, SDL_Rect* cameraRect) {
-    SDL_Rect renderRect;
-    int widthDiff = entity->collision_box.w - entity->texture.width;
-    int heightDiff = entity->collision_box.h - entity->texture.height;
-
-    renderRect.x = entity->collision_box.x - cameraRect->x - widthDiff / 2;
-    renderRect.y = entity->collision_box.y - cameraRect->y - heightDiff / 2;
-    renderRect.w = entity->texture.width;
-    renderRect.h = entity->texture.height;
-
-    return renderRect;
 }
 
 bool checkRectCollision(SDL_Rect* rectA, SDL_Rect* rectB) {

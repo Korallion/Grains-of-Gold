@@ -32,10 +32,12 @@ int main(int argc, char *args[])
 
     Player player;
     player.texture = loadTextureFromFile(gameRenderer, "sprites/player_sprite.png");
+    player.collision_box.w = player.texture.width;
+    player.collision_box.h = player.texture.height;
     player.collision_box.x = (BACKGROUND_W - player.collision_box.w) / 2;
     player.collision_box.y = (BACKGROUND_H - player.collision_box.h) / 2;
     player.direction = 0;
-
+    
     loadPlayerPosition(&player);
     
     SDL_Point oldPlayerPosition;
@@ -57,14 +59,34 @@ int main(int argc, char *args[])
     int wallsIndex = 4;
     Entity redBlock;
 
+    walls[0].collision_box.x = 0;
+    walls[0].collision_box.y = 0;
+    walls[0].collision_box.w = 10;
+    walls[0].collision_box.h = BACKGROUND_H;
+
+    walls[1].collision_box.x = BACKGROUND_W;
+    walls[1].collision_box.y = 0;
+    walls[1].collision_box.w = 10;
+    walls[1].collision_box.h = BACKGROUND_H;
+
+    walls[2].collision_box.x = 0;
+    walls[2].collision_box.y = 0;
+    walls[2].collision_box.w = BACKGROUND_W;
+    walls[2].collision_box.h = 10;
+
+    walls[3].collision_box.x = 0;
+    walls[3].collision_box.y = BACKGROUND_H;
+    walls[3].collision_box.w = BACKGROUND_W;
+    walls[3].collision_box.h = 10;
+
     for (int i = 0; i < 4; i++) {
+        walls[i].texture = genericTexture;
         collisionEntities.push_back(&walls[i]);
     }
 
-    loadEntityArray(walls, 4, "simple_border", gameRenderer, genericTextureSrc);
-    loadEntity(&redBlock, "red_block");
+    // loadEntityArray(walls, 4, "simple_border", gameRenderer, genericTextureSrc);
+    // loadEntity(&redBlock, "red_block");
     redBlock.texture = genericTexture;
-
 
     const int CAMERA_W = 1280;
     const int CAMERA_H = 720;
@@ -165,8 +187,8 @@ int main(int argc, char *args[])
     }
 
     savePlayerPosition(&player);
-    saveEntity(&redBlock, "red_block");
-    saveEntityArray(walls, 4, "simple_border");
+    // saveEntity(&redBlock, "red_block");
+    // saveEntityArray(walls, 4, "simple_border");
     grains::close(gameWindow, gameRenderer);
 
     return 0;
