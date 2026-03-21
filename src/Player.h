@@ -3,12 +3,7 @@
 #include "Entities.h"
 #include <string>
 
-// typedef struct {
-//     Entity entity;
-//     float maxVelocity = 8;
-//     float direction, currentVelocity;
-// } Player : Mover;
-
+// Stuff to be added 
 struct Player : Mover
 {
 };
