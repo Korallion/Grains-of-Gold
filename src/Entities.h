@@ -13,10 +13,10 @@ struct Entity
     GameTexture texture;
 };
 
-struct Mover
+struct Mover : Entity
 {
-    Entity* entity;
-    float direction, currentVelocity, maxVelocity, acceleration;
+    float maxVelocity = 8;
+    float direction, velocity;
 };
 
 void renderEntity(Entity *entity, SDL_Renderer *renderer, SDL_Rect* cameraRect);

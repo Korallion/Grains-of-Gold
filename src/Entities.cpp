@@ -9,12 +9,12 @@ void renderEntity(Entity *entity, SDL_Renderer *renderer, SDL_Rect* cameraRect)
 };
 
 void moveEntity(Mover* mover) {
-    if (mover->currentVelocity == 0) {
+    if (mover->velocity == 0) {
         return;
     }
 
-    mover->entity->collision_box.x += mover->currentVelocity * cos(mover->direction);
-    mover->entity->collision_box.y += mover->currentVelocity * sin(mover->direction);
+    mover->collision_box.x += mover->velocity * cos(mover->direction);
+    mover->collision_box.y += mover->velocity * sin(mover->direction);
 }
 
 SDL_Rect getRenderRect(Entity* entity, SDL_Rect* cameraRect) {

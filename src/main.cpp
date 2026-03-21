@@ -31,9 +31,9 @@ int main(int argc, char *args[])
     SDL_Event e;
 
     Player player;
-    player.entity.texture = loadTextureFromFile(gameRenderer, "sprites/player_sprite.png");
-    player.entity.collision_box.x = (BACKGROUND_W - player.entity.collision_box.w) / 2;
-    player.entity.collision_box.y = (BACKGROUND_H - player.entity.collision_box.h) / 2;
+    player.texture = loadTextureFromFile(gameRenderer, "sprites/player_sprite.png");
+    player.collision_box.x = (BACKGROUND_W - player.collision_box.w) / 2;
+    player.collision_box.y = (BACKGROUND_H - player.collision_box.h) / 2;
     player.direction = 0;
 
     loadPlayerPosition(&player);
@@ -97,8 +97,8 @@ int main(int argc, char *args[])
         SDL_SetRenderDrawColor(gameRenderer, 0xFF, 0xFF, 0xFF, 0XFF);
         SDL_RenderClear(gameRenderer);
 
-        oldPlayerPosition.x = player.entity.collision_box.x;
-        oldPlayerPosition.y = player.entity.collision_box.y;
+        oldPlayerPosition.x = player.collision_box.x;
+        oldPlayerPosition.y = player.collision_box.y;
 
         updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
 
@@ -108,8 +108,8 @@ int main(int argc, char *args[])
             applyCollisionState(collisionState, &player, collisionEntities[i]);
         }
 
-        cameraRect.x = player.entity.collision_box.x - (CAMERA_W - player.entity.collision_box.w) / 2, 
-        cameraRect.y = player.entity.collision_box.y - (CAMERA_H - player.entity.collision_box.h) / 2, 
+        cameraRect.x = player.collision_box.x - (CAMERA_W - player.collision_box.w) / 2, 
+        cameraRect.y = player.collision_box.y - (CAMERA_H - player.collision_box.h) / 2, 
         renderTextureToCamera(gameRenderer, &background, 0, 0, &cameraRect);
 
         for (int i = 0; i < wallsIndex; i++)
@@ -118,14 +118,14 @@ int main(int argc, char *args[])
         }
 
         renderEntity(&redBlock, gameRenderer, &cameraRect);
-        renderEntity(&player.entity, gameRenderer, &cameraRect);
+        renderEntity(&player, gameRenderer, &cameraRect);
 
         // Top right corner game data
-        playerCoordinates = "X: " + std::to_string(player.entity.collision_box.x) + "  Y: " + std::to_string(player.entity.collision_box.y);
+        playerCoordinates = "X: " + std::to_string(player.collision_box.x) + "  Y: " + std::to_string(player.collision_box.y);
         fpsDisplay = "FPS: " + std::to_string(avgFPS);
         timePassed = "Time Passed: " + std::to_string(SDL_GetTicks() / 1000.f) + " s";
         playerDirection = "Player direction: " + std::to_string(player.direction);
-        playerSpeed = "Player speed x: " + std::to_string(player.entity.collision_box.x - oldPlayerPosition.x) + "\nPlayer speed y: " + std::to_string(player.entity.collision_box.y - oldPlayerPosition.y);
+        playerSpeed = "Player speed x: " + std::to_string(player.collision_box.x - oldPlayerPosition.x) + "\nPlayer speed y: " + std::to_string(player.collision_box.y - oldPlayerPosition.y);
 
         text = createTextureFromText(gameRenderer, debugFont, playerCoordinates, textColor);
         renderTexture(gameRenderer, &text, 10, 10, NULL);

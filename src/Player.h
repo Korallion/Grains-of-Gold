@@ -3,11 +3,16 @@
 #include "Entities.h"
 #include <string>
 
-typedef struct {
-    Entity entity;
-    float maxVelocity = 8;
-    float direction, currentVelocity;
-} Player;
+// typedef struct {
+//     Entity entity;
+//     float maxVelocity = 8;
+//     float direction, currentVelocity;
+// } Player : Mover;
+
+struct Player : Mover
+{
+};
+
 
 enum Collisions {
     NOT_COLLIDING,
