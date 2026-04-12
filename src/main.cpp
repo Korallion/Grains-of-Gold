@@ -30,6 +30,9 @@ int main(int argc, char *args[])
 
     SDL_Event e;
 
+    std::vector<Entity*> collisionEntities;
+    std::vector<Entity*> renderEntities;
+
     Player player;
     player.texture = loadTextureFromFile(gameRenderer, "sprites/player_sprite.png");
     player.collision_box.w = player.texture.width;
@@ -37,6 +40,7 @@ int main(int argc, char *args[])
     player.collision_box.x = (BACKGROUND_W - player.collision_box.w) / 2;
     player.collision_box.y = (BACKGROUND_H - player.collision_box.h) / 2;
     player.direction = 0;
+    renderEntities.push_back(&player);
     
     loadPlayerPosition(&player);
     
@@ -53,7 +57,6 @@ int main(int argc, char *args[])
 
     const std::string genericTextureSrc = "sprites/red.png";
     const GameTexture genericTexture = loadTextureFromFile(gameRenderer, genericTextureSrc);
-    std::vector<Entity*> collisionEntities;
     
     Entity redBlock;
     redBlock.texture = genericTexture;
@@ -62,6 +65,7 @@ int main(int argc, char *args[])
     // redBlock.collision_box.w = 200;
     // redBlock.collision_box.h = 200;
     collisionEntities.push_back(&redBlock);
+    renderEntities.push_back(&redBlock);
 
     Entity walls[4];
     int wallsIndex = 4;
@@ -89,6 +93,7 @@ int main(int argc, char *args[])
     for (int i = 0; i < 4; i++) {
         walls[i].texture = genericTexture;
         collisionEntities.push_back(&walls[i]);
+        renderEntities.push_back(&walls[i]);
     }
 
     loadEntityArray(walls, 4, "simple_border", gameRenderer, genericTextureSrc);
@@ -127,7 +132,6 @@ int main(int argc, char *args[])
 
         oldPlayerPosition.x = player.collision_box.x;
         oldPlayerPosition.y = player.collision_box.y;
-
         updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
 
         for (int i = 0; i < collisionEntities.size(); i++)
@@ -136,17 +140,13 @@ int main(int argc, char *args[])
             applyCollisionState(collisionState, &player, collisionEntities[i]);
         }
 
-        cameraRect.x = player.collision_box.x - (CAMERA_W - player.collision_box.w) / 2, 
+        cameraRect.x = player.collision_box.x - (CAMERA_W - player.collision_box.w) / 2,
         cameraRect.y = player.collision_box.y - (CAMERA_H - player.collision_box.h) / 2, 
         renderTextureToCamera(gameRenderer, &background, 0, 0, &cameraRect);
 
-        for (int i = 0; i < wallsIndex; i++)
-        {
-            renderEntity(&walls[i], gameRenderer, &cameraRect);
+        for (int i = 0; i < renderEntities.size(); i++) {
+            renderEntity(renderEntities[i], gameRenderer, &cameraRect);
         }
-
-        renderEntity(&redBlock, gameRenderer, &cameraRect);
-        renderEntity(&player, gameRenderer, &cameraRect);
 
         // Top right corner game data
         playerCoordinates = "X: " + std::to_string(player.collision_box.x) + "  Y: " + std::to_string(player.collision_box.y);
@@ -157,16 +157,12 @@ int main(int argc, char *args[])
 
         text = createTextureFromText(gameRenderer, debugFont, playerCoordinates, textColor);
         renderTexture(gameRenderer, &text, 10, 10, NULL);
-
         text = createTextureFromText(gameRenderer, debugFont, fpsDisplay, textColor);
         renderTexture(gameRenderer, &text, 10, 40, NULL);
-
         text = createTextureFromText(gameRenderer, debugFont, timePassed, textColor);
         renderTexture(gameRenderer, &text, 10, 70, NULL);
-
         text = createTextureFromText(gameRenderer, debugFont, playerDirection, textColor);
         renderTexture(gameRenderer, &text, 10, 100, NULL);
-
         text = createTextureFromText(gameRenderer, debugFont, playerSpeed, textColor);
         renderTexture(gameRenderer, &text, 10, 130, NULL);
 
