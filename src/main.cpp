@@ -3,8 +3,6 @@
 #include <string>
 #include <cstdio>
 #include <cmath>
-#include <sstream>
-#include <iostream>
 #include "include_list.h"
 
 const int BACKGROUND_W = 1920;
@@ -29,35 +27,46 @@ int main(int argc, char *args[])
     bool quit = false;
 
     SDL_Event e;
-
-    std::vector<Entity*> collisionEntities;
-    std::vector<Entity*> renderEntities;
+    
+    // std::vector<*> collisionEntities;
+    std::vector<Renderable*> renderEntities;
 
     Player player;
     player.texture = loadTextureFromFile(gameRenderer, "sprites/player_sprite.png");
-    player.collision_box.w = player.texture.width;
-    player.collision_box.h = player.texture.height;
-    player.collision_box.x = (BACKGROUND_W - player.collision_box.w) / 2;
-    player.collision_box.y = (BACKGROUND_H - player.collision_box.h) / 2;
-    player.direction = 0;
+    player.w = player.texture.w;
+    player.h = player.texture.h;
+    player.x = (BACKGROUND_W) / 2;
+    player.y = (BACKGROUND_H) / 2;
+    player.directionRad = 0;
+    player.maxSpeed = 100;
     renderEntities.push_back(&player);
-    
-    loadPlayerPosition(&player);
     
     SDL_Point oldPlayerPosition;
 
-    GameTexture background = loadTextureFromFile(gameRenderer, "sprites/background_simple.png");
-    background.width = BACKGROUND_W;
-    background.height = BACKGROUND_H;
+    WorldObject rock;
+    rock.texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    rock.x = BACKGROUND_W / 2 - 100;
+    rock.y = BACKGROUND_H / 2 - 100;
+    rock.w = 200;
+    rock.h = 600;
+    renderEntities.push_back(&rock);
 
-    GameTexture text;
+    Renderable background;
+    background.texture = loadTextureFromFile(gameRenderer, "sprites/background_simple.png");
+    background.x = 0;
+    background.y = 0;
+    background.w = BACKGROUND_W;
+    background.h = BACKGROUND_H;
+
+    Renderable textRenderable;
     char fontSrc[] = "ttf/fixed_01.ttf";
     TTF_Font *debugFont = loadTTF(fontSrc);
     SDL_Color textColor = {0, 0, 0};
 
-    const std::string genericTextureSrc = "sprites/red.png";
-    const GameTexture genericTexture = loadTextureFromFile(gameRenderer, genericTextureSrc);
-    
+    // const std::string genericTextureSrc = "sprites/red.png";
+    // const RenderObject genericTexture = loadTextureFromFile(gameRenderer, genericTextureSrc);
+   
+    /*
     Entity redBlock;
     redBlock.texture = genericTexture;
     // redBlock.collision_box.x = 200;
@@ -98,6 +107,7 @@ int main(int argc, char *args[])
 
     loadEntityArray(walls, 4, "simple_border", gameRenderer, genericTextureSrc);
     loadEntity(&redBlock, "red_block");
+    */
 
     const int CAMERA_W = 1280;
     const int CAMERA_H = 720;
@@ -130,41 +140,64 @@ int main(int argc, char *args[])
         SDL_SetRenderDrawColor(gameRenderer, 0xFF, 0xFF, 0xFF, 0XFF);
         SDL_RenderClear(gameRenderer);
 
-        oldPlayerPosition.x = player.collision_box.x;
-        oldPlayerPosition.y = player.collision_box.y;
+        oldPlayerPosition.x = player.x;
+        oldPlayerPosition.y = player.y;
         updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
-
+        
+        /*
+        // Collisions
         for (int i = 0; i < collisionEntities.size(); i++)
         {
             int collisionState = getCollisionState(&player, &oldPlayerPosition, collisionEntities[i]);
             applyCollisionState(collisionState, &player, collisionEntities[i]);
         }
+        */
 
-        cameraRect.x = player.collision_box.x - (CAMERA_W - player.collision_box.w) / 2,
-        cameraRect.y = player.collision_box.y - (CAMERA_H - player.collision_box.h) / 2, 
-        renderTextureToCamera(gameRenderer, &background, 0, 0, &cameraRect);
+        // Render background
+        cameraRect.x = player.x - (CAMERA_W - player.w) / 2,
+        cameraRect.y = player.y - (CAMERA_H - player.h) / 2, 
+        renderTextureToCamera(gameRenderer, &background, &cameraRect);
+        
+        // Render game objects
+        // renderTextureToCamera(gameRenderer, &player, &cameraRect);
 
         for (int i = 0; i < renderEntities.size(); i++) {
-            renderEntity(renderEntities[i], gameRenderer, &cameraRect);
+            renderTextureToCamera(gameRenderer, renderEntities[i], &cameraRect);
         }
 
         // Top right corner game data
-        playerCoordinates = "X: " + std::to_string(player.collision_box.x) + "  Y: " + std::to_string(player.collision_box.y);
+        playerCoordinates = "X: " + std::to_string(player.x) + "  Y: " + std::to_string(player.y);
         fpsDisplay = "FPS: " + std::to_string(avgFPS);
         timePassed = "Time Passed: " + std::to_string(SDL_GetTicks() / 1000.f) + " s";
-        playerDirection = "Player direction: " + std::to_string(player.direction);
-        playerSpeed = "Player speed x: " + std::to_string(player.collision_box.x - oldPlayerPosition.x) + "\nPlayer speed y: " + std::to_string(player.collision_box.y - oldPlayerPosition.y);
+        playerDirection = "Player direction: " + std::to_string(player.directionRad);
+        playerSpeed = "Player speed x: " + std::to_string(player.x - oldPlayerPosition.x) + "\nPlayer speed y: " + std::to_string(player.y - oldPlayerPosition.y);
 
-        text = createTextureFromText(gameRenderer, debugFont, playerCoordinates, textColor);
-        renderTexture(gameRenderer, &text, 10, 10, NULL);
-        text = createTextureFromText(gameRenderer, debugFont, fpsDisplay, textColor);
-        renderTexture(gameRenderer, &text, 10, 40, NULL);
-        text = createTextureFromText(gameRenderer, debugFont, timePassed, textColor);
-        renderTexture(gameRenderer, &text, 10, 70, NULL);
-        text = createTextureFromText(gameRenderer, debugFont, playerDirection, textColor);
-        renderTexture(gameRenderer, &text, 10, 100, NULL);
-        text = createTextureFromText(gameRenderer, debugFont, playerSpeed, textColor);
-        renderTexture(gameRenderer, &text, 10, 130, NULL);
+        textRenderable.texture = createTextureFromText(gameRenderer, debugFont, playerCoordinates, textColor);
+        textRenderable.x = 10;
+        textRenderable.y = 10;
+        textRenderable.w = textRenderable.texture.w;
+        textRenderable.h = textRenderable.texture.h;
+        renderTexture(gameRenderer, &textRenderable, NULL);
+        textRenderable.texture = createTextureFromText(gameRenderer, debugFont, fpsDisplay, textColor);
+        textRenderable.y = 40;
+        textRenderable.w = textRenderable.texture.w;
+        textRenderable.h = textRenderable.texture.h;
+        renderTexture(gameRenderer, &textRenderable, NULL);
+        textRenderable.texture = createTextureFromText(gameRenderer, debugFont, timePassed, textColor);
+        textRenderable.y = 70;
+        textRenderable.w = textRenderable.texture.w;
+        textRenderable.h = textRenderable.texture.h;
+        renderTexture(gameRenderer, &textRenderable, NULL);
+        textRenderable.texture = createTextureFromText(gameRenderer, debugFont, playerDirection, textColor);
+        textRenderable.y = 100;
+        textRenderable.w = textRenderable.texture.w;
+        textRenderable.h = textRenderable.texture.h;
+        renderTexture(gameRenderer, &textRenderable, NULL);
+        textRenderable.texture = createTextureFromText(gameRenderer, debugFont, playerSpeed, textColor);
+        textRenderable.y = 130;
+        textRenderable.w = textRenderable.texture.w;
+        textRenderable.h = textRenderable.texture.h;
+        renderTexture(gameRenderer, &textRenderable, NULL);
 
         if (frameStartTime - relativeTime > 200)
         {
@@ -188,9 +221,6 @@ int main(int argc, char *args[])
         }
     }
 
-    savePlayerPosition(&player);
-    saveEntity(&redBlock, "red_block");
-    saveEntityArray(walls, 4, "simple_border");
     grains::close(gameWindow, gameRenderer);
 
     return 0;

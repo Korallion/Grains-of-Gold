@@ -1,4 +1,5 @@
-#include "Player.h"
+#include "player.h"
+#include "character.h"
 
 void updatePlayerPosition(Player *player, const Uint8 *keyState, float deltaTime)
 {
@@ -34,18 +35,21 @@ void updatePlayerPosition(Player *player, const Uint8 *keyState, float deltaTime
 
     if (vertical == 0 && horizontal == 0)
     {
-        player->velocity = 0;
+        player->speed = 0;
     }
     else
     {
-        player->velocity = player->maxVelocity;
-        player->direction = atan2(vertical, horizontal);
+        player->speed = player->maxSpeed;
+        player->directionRad = atan2(vertical, horizontal);
     }
 
-    player->collision_box.x += round(player->velocity * sprint * cos(player->direction));
-    player->collision_box.y += round(player->velocity * sprint * sin(player->direction));
+    player->collisionBox.x += round(player->speed * sprint * cos(player->directionRad));
+    player->collisionBox.y += round(player->speed * sprint * sin(player->directionRad));
+
+    handleCharacterMovement(player, deltaTime);
 };
 
+/*
 int getCollisionState(Player *player, SDL_Point *oldPosition, Entity *entity)
 {
     if (!SDL_HasIntersection(&player->collision_box, &entity->collision_box)) {
@@ -112,4 +116,4 @@ void applyCollisionState(int collisionState, Player *player, Entity *entity) {
             player->collision_box.y = entity->collision_box.y - player->collision_box.h;
             break;
     }
-}
+} */
