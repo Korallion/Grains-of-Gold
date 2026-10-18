@@ -24,4 +24,6 @@ void handleCharacterMovement(Character *character, int deltaTime);
 
 int getCollisionState(Character *character, GameObject* gameObject);
 
+void applyMovementCorrection(int collisionState, Character *character, GameObject *collider);
+
 void handleCollision(Character *character, GameObject* gameObject);

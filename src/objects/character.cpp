@@ -61,7 +61,7 @@ int getCollisionState(Character *character, GameObject *collider)
     return NOT_COLLIDING;
 }
 
-void applyCollisionState(int collisionState, Character *character, GameObject *collider) {
+void applyMovementCorrection(int collisionState, Character *character, GameObject *collider) {
     switch(collisionState) {
         case NOT_COLLIDING:
             break;
@@ -86,5 +86,8 @@ void applyCollisionState(int collisionState, Character *character, GameObject *c
 
 void handleCollision(Character* character, GameObject* collider) {
     int collisionState = getCollisionState(character, collider);
-    applyCollisionState(collisionState, character, collider);
+
+    if (collider->blocksMovement) {
+        applyMovementCorrection(collisionState, character, collider);
+    }
 }

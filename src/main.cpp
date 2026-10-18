@@ -45,13 +45,26 @@ int main(int argc, char *args[])
 
     WorldObject rock;
     rock.texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
-    rock.x = BACKGROUND_W / 2 - 500;
-    rock.y = BACKGROUND_H / 2 - 500;
+    rock.x = BACKGROUND_W / 2 - 300;
+    rock.y = BACKGROUND_H / 2 - 300;
     rock.w = 200;
     rock.h = 600;
     rock.collisionBox = {rock.x, rock.y, rock.w, rock.h};
+    rock.blocksMovement = true;
     renderEntities.push_back(&rock);
     collisionEntities.push_back(&rock);
+    
+    WorldObject fog;
+    fog.texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    fog.x = BACKGROUND_W / 2 + 300;
+    fog.y = BACKGROUND_H / 2 - 200;
+    fog.w = 200;
+    fog.h = 400;
+    fog.collisionBox = {rock.x, rock.y, rock.w, rock.h};
+    fog.blocksMovement = false;
+    renderEntities.push_back(&fog);
+    collisionEntities.push_back(&fog);
+
 
     Renderable background;
     background.texture = loadTextureFromFile(gameRenderer, "sprites/background_simple.png");

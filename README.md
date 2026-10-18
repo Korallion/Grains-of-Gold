@@ -69,4 +69,10 @@ Ahh screw it, let's split
     - npcs
     - players
 
+### Game plan
 
+I can now render things and have them collide (yay!). The only thing that moves is the player. What other basic things do we need?
+- a pause menu
+- rooms
+- pickup and put down (inventory interaction)
+- ui elements (health, stamina)
