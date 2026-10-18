@@ -18,11 +18,10 @@ struct GameObject : Renderable {
     Inventory inventory;
     SDL_Rect collisionBox;
 
-    std::function<void(GameObject& self, GameObject& other)> onCollision;
-    std::function<void(GameObject& self, GameObject& other)> onInteract;
-    std::function<void(GameObject& self)> onDeath;
+    // std::function<void(GameObject& self, GameObject& other)> onCollision;
+    // std::function<void(GameObject& self, GameObject& other)> onInteract;
+    // std::function<void(GameObject& self)> onDeath;
 };
 
 bool getIsColliding(GameObject* mover, GameObject* collider);
-
 
