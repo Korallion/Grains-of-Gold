@@ -3,3 +3,4 @@ ttf/
 .vscode/
 grains
 .editorconfig
+compile_commands.json

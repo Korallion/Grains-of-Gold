@@ -1,4 +1,4 @@
-#include "Initialize.h"
+#include "initialize.h"
 
 namespace grains
 {
@@ -10,7 +10,7 @@ namespace grains
             return false;
         }
 
-        !SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
         if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
         {
