@@ -28,7 +28,7 @@ int main(int argc, char *args[])
 
     SDL_Event e;
     
-    // std::vector<*> collisionEntities;
+    std::vector<GameObject*> collisionEntities;
     std::vector<Renderable*> renderEntities;
 
     Player player;
@@ -38,18 +38,33 @@ int main(int argc, char *args[])
     player.x = (BACKGROUND_W) / 2;
     player.y = (BACKGROUND_H) / 2;
     player.directionRad = 0;
-    player.maxSpeed = 100;
+    player.maxSpeed = 200;
+    player.oldPosition = {player.x, player.y};
+    player.collisionBox = {player.x, player.y, player.w, player.h};
     renderEntities.push_back(&player);
-    
-    SDL_Point oldPlayerPosition;
 
     WorldObject rock;
     rock.texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
-    rock.x = BACKGROUND_W / 2 - 100;
-    rock.y = BACKGROUND_H / 2 - 100;
+    rock.x = BACKGROUND_W / 2 - 300;
+    rock.y = BACKGROUND_H / 2 - 300;
     rock.w = 200;
     rock.h = 600;
+    rock.collisionBox = {rock.x, rock.y, rock.w, rock.h};
+    rock.blocksMovement = true;
     renderEntities.push_back(&rock);
+    collisionEntities.push_back(&rock);
+    
+    WorldObject fog;
+    fog.texture = loadTextureFromFile(gameRenderer, "sprites/red.png");
+    fog.x = BACKGROUND_W / 2 + 300;
+    fog.y = BACKGROUND_H / 2 - 200;
+    fog.w = 200;
+    fog.h = 400;
+    fog.collisionBox = {rock.x, rock.y, rock.w, rock.h};
+    fog.blocksMovement = false;
+    renderEntities.push_back(&fog);
+    collisionEntities.push_back(&fog);
+
 
     Renderable background;
     background.texture = loadTextureFromFile(gameRenderer, "sprites/background_simple.png");
@@ -140,18 +155,15 @@ int main(int argc, char *args[])
         SDL_SetRenderDrawColor(gameRenderer, 0xFF, 0xFF, 0xFF, 0XFF);
         SDL_RenderClear(gameRenderer);
 
-        oldPlayerPosition.x = player.x;
-        oldPlayerPosition.y = player.y;
+        player.oldPosition.x = player.x;
+        player.oldPosition.y = player.y;
         updatePlayerPosition(&player, SDL_GetKeyboardState(NULL), deltaTime);
         
-        /*
         // Collisions
         for (int i = 0; i < collisionEntities.size(); i++)
         {
-            int collisionState = getCollisionState(&player, &oldPlayerPosition, collisionEntities[i]);
-            applyCollisionState(collisionState, &player, collisionEntities[i]);
+             handleCollision(&player, collisionEntities[i]);
         }
-        */
 
         // Render background
         cameraRect.x = player.x - (CAMERA_W - player.w) / 2,
@@ -159,8 +171,6 @@ int main(int argc, char *args[])
         renderTextureToCamera(gameRenderer, &background, &cameraRect);
         
         // Render game objects
-        // renderTextureToCamera(gameRenderer, &player, &cameraRect);
-
         for (int i = 0; i < renderEntities.size(); i++) {
             renderTextureToCamera(gameRenderer, renderEntities[i], &cameraRect);
         }
@@ -170,7 +180,7 @@ int main(int argc, char *args[])
         fpsDisplay = "FPS: " + std::to_string(avgFPS);
         timePassed = "Time Passed: " + std::to_string(SDL_GetTicks() / 1000.f) + " s";
         playerDirection = "Player direction: " + std::to_string(player.directionRad);
-        playerSpeed = "Player speed x: " + std::to_string(player.x - oldPlayerPosition.x) + "\nPlayer speed y: " + std::to_string(player.y - oldPlayerPosition.y);
+        playerSpeed = "Player speed x: " + std::to_string(player.x - player.oldPosition.x) + "\nPlayer speed y: " + std::to_string(player.y - player.oldPosition.y);
 
         textRenderable.texture = createTextureFromText(gameRenderer, debugFont, playerCoordinates, textColor);
         textRenderable.x = 10;
